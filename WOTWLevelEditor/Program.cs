@@ -12,8 +12,7 @@
             }
 
             Console.WriteLine("Opening file: " + args[0]);
-            byte[] bytes = System.IO.File.ReadAllBytes(args[0]);
-
+            byte[] bytes = File.ReadAllBytes(args[0]);
             Level level = new(bytes);
 
             /*Console.WriteLine("Object types (" + level.ObjectTypeList.Length + "):");
