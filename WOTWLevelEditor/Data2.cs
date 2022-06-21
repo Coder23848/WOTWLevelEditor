@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace WOTWLevelEditor
 {
@@ -13,7 +9,7 @@ namespace WOTWLevelEditor
         public Data2(byte[] pattern)
         {
             ID = BitConverter.ToInt32(pattern, 0);
-            System.Diagnostics.Debug.Assert(BitConverter.ToInt32(pattern, 4) == 0); // Always 0 for some reason
+            Debug.Assert(BitConverter.ToInt32(pattern, 4) == 0); // Always 0 for some reason
         }
 
         public override string ToString()
