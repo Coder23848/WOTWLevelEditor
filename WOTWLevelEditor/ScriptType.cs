@@ -6,26 +6,24 @@ using System.Threading.Tasks;
 
 namespace WOTWLevelEditor
 {
-    public struct ScriptType
+    public class ScriptType : ObjectType
     {
-        public string Name { get; }
         public List<Type> Parameters { get; }
-        public byte Suffix { get; }
 
         public ScriptType(byte[] pattern)
         {
-            if (pattern.Length != 33)
+            if (pattern.Length != 39)
             {
-                throw new ArgumentException("Pattern length is 32 bytes + 1 suffix byte.");
+                throw new ArgumentException("Pattern length is 39, not " + pattern.Length);
             }
-            byte[] name = pattern[0..16];
+            byte[] name = pattern[7..23];
             Name = TypeFromBytePattern(name);
             byte[] parameters = pattern[17..32];
             Parameters = ParametersFromBytePattern(parameters);
-            Suffix = pattern[32];
+            Prefix = pattern[32];
         }
 
-        public static string TypeFromBytePattern(byte[] pattern)
+        private static string TypeFromBytePattern(byte[] pattern)
         {
             return BitConverter.ToString(pattern) switch
             {
@@ -33,7 +31,7 @@ namespace WOTWLevelEditor
             };
         }
 
-        public static List<Type> ParametersFromBytePattern(byte[] pattern)
+        private static List<Type> ParametersFromBytePattern(byte[] pattern)
         {
             return BitConverter.ToString(pattern) switch
             {

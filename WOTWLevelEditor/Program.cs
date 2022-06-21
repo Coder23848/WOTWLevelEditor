@@ -40,8 +40,16 @@ namespace WOTWLevelEditor
             
             for (int i = 0; i < objectTypes.Length; i++)
             {
-                objectTypes[i] = new ObjectType(ByteHelper.GetAtIndex(bytes, parserLocation, 23));
-                parserLocation += 23;
+                if (bytes[parserLocation] == 0x72)
+                {
+                    objectTypes[i] = new ScriptType(ByteHelper.GetAtIndex(bytes, parserLocation, 39));
+                    parserLocation += 39;
+                }
+                else
+                {
+                    objectTypes[i] = new ObjectType(ByteHelper.GetAtIndex(bytes, parserLocation, 23));
+                    parserLocation += 23;
+                }
             }
 
             Console.WriteLine("Object types (" + objectTypes.Length + "):");

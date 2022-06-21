@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace WOTWLevelEditor
 {
-    public struct ObjectType
+    public class ObjectType
     {
-        public byte Prefix { get; }
-        public string Name { get; }
+        public byte Prefix { get; init; }
+        public string Name { get; init; }
 
         public ObjectType(byte[] pattern)
         {
@@ -21,8 +21,12 @@ namespace WOTWLevelEditor
             Name = TypeFromBytePattern(name);
             Prefix = pattern[0];
         }
+        protected ObjectType() // I don't like this
+        {
+            Name = "";
+        }
 
-        public static string TypeFromBytePattern(byte[] pattern)
+        private static string TypeFromBytePattern(byte[] pattern)
         {
             return BitConverter.ToString(pattern) switch
             {
