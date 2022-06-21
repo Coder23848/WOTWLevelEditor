@@ -7,9 +7,9 @@ namespace WOTWLevelEditor
         public int ObjectID { get; }
         public int Data3 { get; }
         public int Data4 { get; }
-        public ObjectTypes TypeID { get; }
+        public ObjectType TypeID { get; }
 
-        public ObjectTypeLink(int objectID, int data3, int data4, ObjectTypes typeID)
+        public ObjectTypeLink(int objectID, int data3, int data4, ObjectType typeID)
         {
             ObjectID = objectID;
             Data3 = data3;

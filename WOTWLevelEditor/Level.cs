@@ -68,7 +68,7 @@ namespace WOTWLevelEditor
                 objectTypeLinkList[i] = new ObjectTypeLink(BitConverter.ToInt32(bytes, parserLocation),
                                          BitConverter.ToInt32(bytes, parserLocation + 8),
                                          BitConverter.ToInt32(bytes, parserLocation + 12),
-                                         ObjectTypeList[BitConverter.ToInt32(bytes, parserLocation + 16)].Type);
+                                         ObjectTypeList[BitConverter.ToInt32(bytes, parserLocation + 16)]);
                 parserLocation += 20;
             }
         }

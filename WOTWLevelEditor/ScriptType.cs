@@ -37,7 +37,7 @@
         }
         public override string ToString()
         {
-            return Type.ToString() + ", " + Name + Parameters;
+            return Name + Parameters;
         }
     }
 }
