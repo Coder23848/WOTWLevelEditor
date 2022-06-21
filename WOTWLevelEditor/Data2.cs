@@ -13,6 +13,7 @@ namespace WOTWLevelEditor
         public Data2(byte[] pattern)
         {
             ID = BitConverter.ToInt32(pattern, 0);
+            System.Diagnostics.Debug.Assert(BitConverter.ToInt32(pattern, 4) == 0); // Always 0 for some reason
         }
 
         public override string ToString()
