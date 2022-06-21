@@ -11,11 +11,12 @@ Object types [
 	Monobehavior => <72 (Monobehavior)><unknown, 6 bytes><scriptID?><parameters?>
 ]
 <number of object IDs>
-<pad out to multiple of 4 with null characters>
+<pad out to multiple of 4 with null bytes>
 ID data [ 
 	<ID><00-00-00-00><unknown, 8 bytes><objectTypeID>
 ]
-<unknown, list of external file references?>
+<unknown>
+<list of external file references?, seperated by 22 null bytes>
 objects [
 	Box Collider => <isTrigger><unknown, 3 bytes><sizeX><sizeY><sizeZ><positionX><positionY><positionZ>
 	Capsule Collider => <isTrigger><unknown, 3 bytes><radius><height><direction><positionX><positionY><positionZ>
