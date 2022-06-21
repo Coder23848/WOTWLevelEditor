@@ -52,6 +52,8 @@ namespace WOTWLevelEditor
                 }
             }
 
+
+
             Console.WriteLine("Object types (" + objectTypes.Length + "):");
             foreach(ObjectType i in objectTypes)
             {
