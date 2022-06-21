@@ -8,9 +8,11 @@ namespace WOTWLevelEditor
 {
     public class ObjectType
     {
-        public byte Prefix { get; init; }
-        public byte[] Prefix2 { get; init; }
-        public string Name { get; init; }
+        public ObjectTypes Type { get; init; }
+        public byte[] Prefix { get; init; }
+        public byte[] Parameters { get; init; }
+
+        
 
         public ObjectType(byte[] pattern)
         {
@@ -18,33 +20,19 @@ namespace WOTWLevelEditor
             {
                 throw new ArgumentException("Pattern length is 23, not " + pattern.Length);
             }
-            byte[] name = pattern[7..23];
-            Name = TypeFromBytePattern(name);
-            Prefix = pattern[0];
-            Prefix2 = pattern[1..7];
+            Type = (ObjectTypes)pattern[0];
+            Prefix = pattern[1..7];
+            Parameters = pattern[7..23];
         }
         protected ObjectType() // I don't like this
         {
-            Name = "";
-            Prefix2 = new byte[6];
-        }
-
-        private static string TypeFromBytePattern(byte[] pattern)
-        {
-            return BitConverter.ToString(pattern) switch
-            {
-                "9D-16-30-B1-D7-E3-BC-24-AB-E4-6E-58-60-A2-A1-79" => "Mesh Filter",
-                "5B-7F-3F-79-84-59-EA-61-9E-49-27-10-6F-D1-FE-4B" => "Mesh Collider",
-                "43-9E-66-A8-9C-7F-DE-F6-F0-92-7C-92-56-C0-77-3A" => "Box Collider",
-                "8C-86-F4-AC-6B-7F-47-C0-45-56-0D-43-83-AA-DC-8D" => "Sphere Collider",
-                "FB-F6-B0-31-C3-2E-46-1E-E6-1B-E4-29-E5-FE-E7-EB" => "Capsule Collider",
-                _ => BitConverter.ToString(pattern)
-            };
+            Parameters = new byte[16];
+            Prefix = new byte[6];
         }
 
         public override string ToString()
         {
-            return BitConverter.ToString(new byte[] { Prefix }) + ", " + BitConverter.ToString(Prefix2) + ", " + Name;
+            return Type.ToString();
         }
     }
 }

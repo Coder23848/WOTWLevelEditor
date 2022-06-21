@@ -5,20 +5,21 @@ sorted:
 îl@ })Q’œÛOZ`‡O] - unknown
 3fÈ@¢ˆ(+;òóà8Äs - unknown
 ,ð8Ìñ"SWšAóéE - unknown
-76-1C-A8-1F-78-49-15-42-BA-DC-37-F8-10-AB-34-55 - v¨xIBºÜ7ø«4U - possibly GameObject or Transform
-h*-¯qoÃX“p¥ôÅ - unknown
-9D-16-30-B1-D7-E3-BC-24-AB-E4-6E-58-60-A2-A1-79 -  0±×ã¼$«änX`¢¡y - Mesh Filter
+04 - 76-1C-A8-1F-78-49-15-42-BA-DC-37-F8-10-AB-34-55 - v¨xIBºÜ7ø«4U - possibly GameObject or Transform
+17 - h*-¯qoÃX“p¥ôÅ - possibly Moonity Mesh Renderer
+21 - 9D-16-30-B1-D7-E3-BC-24-AB-E4-6E-58-60-A2-A1-79 -  0±×ã¼$«änX`¢¡y - Mesh Filter
 ónŠ�¬!Ò22å÷·c + - unknown
-5B-7F-3F-79-84-59-EA-61-9E-49-27-10-6F-D1-FE-4B - [ ?y„YêažI'oÑþK - Mesh Collider
-43-9E-66-A8-9C-7F-DE-F6-F0-92-7C-92-56-C0-77-3A - Cžf¨œ Þöð’|’VÀw: - Box Collider
+40 - 5B-7F-3F-79-84-59-EA-61-9E-49-27-10-6F-D1-FE-4B - [ ?y„YêažI'oÑþK - Mesh Collider
+41 - 43-9E-66-A8-9C-7F-DE-F6-F0-92-7C-92-56-C0-77-3A - Cžf¨œ Þöð’|’VÀw: - Box Collider
 ÕCê §T_¼ ÑúóÃ - unknown
-30-A4-B9-5A-67-41-91-24-AD-20-3F-AF-F0-26-11-5F - 0¤¹ZgA‘$­  ?¯ð&_ - possibly GameObject or Transform
-8C-86-F4-AC-6B-7F-47-C0-45-56-0D-43-83-AA-DC-8D - Œ†ô¬k GÀEV CƒªÜ  - Sphere Collider
-FB-F6-B0-31-C3-2E-46-1E-E6-1B-E4-29-E5-FE-E7-EB - ûö°1Ã.Fæä)åþçë - Capsule Collider
+68 - 30-A4-B9-5A-67-41-91-24-AD-20-3F-AF-F0-26-11-5F - 0¤¹ZgA‘$­  ?¯ð&_ - possibly GameObject or Transform
+87 - 8C-86-F4-AC-6B-7F-47-C0-45-56-0D-43-83-AA-DC-8D - Œ†ô¬k GÀEV CƒªÜ  - Sphere Collider
+88 - FB-F6-B0-31-C3-2E-46-1E-E6-1B-E4-29-E5-FE-E7-EB - ûö°1Ã.Fæä)åþçë - Capsule Collider
 ïÊŽ[„A¯`¸>£„ÑÕ - unknown
-B6-AC-05-D2-88-FF-B8-42-68-E8-5F-27-38-36-6A-A7 - ¶¬Òˆÿ¸Bhè_'86j§ - unknown, always appears
+9D - B6-AC-05-D2-88-FF-B8-42-68-E8-5F-27-38-36-6A-A7 - ¶¬Òˆÿ¸Bhè_'86j§ - unknown, always appears
 âYtßPÆ^éŠ#í“$B"Ç - unknown
 ;¼z£ äºŒº*pu 9“ - unknown
+72 - script
 
 unsorted:
 07-7D-E6-5C-2E-D5-B9-B0-87-6E-65-37-A9-3C-48-2D - }æ\.Õ¹°‡ne7©<H- - Character Controller
@@ -33,7 +34,7 @@ A8-22-4D-E9-AB-F1-F6-F3-1C-9C-57-FC-70-41-2B-E4 - ¨"Mé«ñöóœWüpA+ä - Hi
 EB-B2-18-33-37-24-90-7F-23-B0-5F-3F-B2-EA-07-93 - ë²37$  #°_?²ê“ - Spring Joint
 93-93-42-BC-21-BC-B6-FB-85-76-68-17-C0-FF-D3-44 - ““B¼!¼¶û…vhÀÿÓD - Terrain Collider
 7F-81-4E-AB-B6-6E-0F-B6-A8-2A-15-EF-17-F7-E1-D3 -   N«¶n¶¨*ï÷áÓ - Wheel Collider
-28-38-E2-AF-E8-D6-A6-1D-27-00-93-D4-D5-4E-B3-62 - (8â¯èÖ¦'�“ÔÕN³b - Mesh Renderer
+17 - 28-38-E2-AF-E8-D6-A6-1D-27-00-93-D4-D5-4E-B3-62 - (8â¯èÖ¦'�“ÔÕN³b - Mesh Renderer
 9E-26-F9-65-91-D3-51-C8-DF-E9-11-B5-DC-23-90-00 - ž&ùe‘ÓQÈßéµÜ# � - Text Mesh
 90-53-6D-D8-F3-F4-FE-3D-F5-96-49-30-A9-48-23-36 -  SmØóôþ=õ–I0©H#6 - Light
 9E-AB-AC-6E-C6-6F-FE-81-8E-00-88-83-72-8F-CC-1B - ž«¬nÆoþ Ž�ˆƒr Ì - Animation

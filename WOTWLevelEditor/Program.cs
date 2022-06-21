@@ -21,7 +21,7 @@ namespace WOTWLevelEditor
             byte[] fileLengthBytes = ByteHelper.GetAtIndex(bytes, 0x4, 4);
             fileLengthBytes = fileLengthBytes.Reverse().ToArray();
             int FileLength = BitConverter.ToInt32(fileLengthBytes);
-            Console.WriteLine("File Length: " + FileLength);
+            Console.WriteLine("File Length: " + FileLength + " bytes");
             parserLocation += 4;
 
             Debug.Assert(Enumerable.SequenceEqual(ByteHelper.GetAtIndex(bytes, parserLocation, 4), new byte[] { 0x00, 0x00, 0x00, 0x11 })); // always equals 00-00-00-11
@@ -40,7 +40,7 @@ namespace WOTWLevelEditor
             
             for (int i = 0; i < objectTypes.Length; i++)
             {
-                if (bytes[parserLocation] == 0x72)
+                if (bytes[parserLocation] == (byte)ObjectTypes.MonoBehaviour)
                 {
                     objectTypes[i] = new ScriptType(ByteHelper.GetAtIndex(bytes, parserLocation, 39));
                     parserLocation += 39;
@@ -55,7 +55,7 @@ namespace WOTWLevelEditor
             Console.WriteLine("Object types (" + objectTypes.Length + "):");
             foreach(ObjectType i in objectTypes)
             {
-                Console.WriteLine(i.ToString());
+                Console.WriteLine("    " + i.ToString());
             }
         }
     }
