@@ -16,11 +16,11 @@
 
             Level level = new(bytes);
 
-            Console.WriteLine("Object types (" + level.ObjectTypeList.Length + "):");
+            /*Console.WriteLine("Object types (" + level.ObjectTypeList.Length + "):");
             foreach (ObjectType i in level.ObjectTypeList)
             {
                 Console.WriteLine("    " + i.ToString());
-            }
+            }*/
 
             Console.WriteLine("Object type links (" + level.ObjectTypeLinkList.Length + "):");
             foreach (ObjectTypeLink i in level.ObjectTypeLinkList)
