@@ -5,11 +5,9 @@ namespace WOTWLevelEditor
     public class Level
     {
         private readonly ObjectType[] objectTypeList = Array.Empty<ObjectType>();
-
         public ObjectType[] ObjectTypeList => objectTypeList;
 
         private readonly ObjectTypeLink[] objectTypeLinkList = Array.Empty<ObjectTypeLink>();
-
         public ObjectTypeLink[] ObjectTypeLinkList => objectTypeLinkList;
 
         public Level(byte[] bytes)
