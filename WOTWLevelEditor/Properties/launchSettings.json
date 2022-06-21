@@ -1,0 +1,28 @@
+{
+  "profiles": {
+    "Test0": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Mario\\Documents\\Unity\\Test\\Test\\Test_Data\\level0"
+    },
+    "Test1": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Mario\\Documents\\Unity\\Test\\Test\\Test_Data\\level1"
+    },
+    "Test2": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Mario\\Documents\\Unity\\Test\\Test\\Test_Data\\level2"
+    },
+    "Test3": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Mario\\Documents\\Unity\\Test\\Test\\Test_Data\\level3"
+    },
+    "WOTW168 (Midnight Burrows entrance)": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Ori and the Will of the Wisps\\oriwotw_Data\\level168\""
+    },
+    "WOTW147 (Willows End save room)": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Ori and the Will of the Wisps\\oriwotw_Data\\level147\""
+    }
+  }
+}
