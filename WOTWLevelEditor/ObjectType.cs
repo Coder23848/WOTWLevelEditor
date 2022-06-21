@@ -9,6 +9,7 @@ namespace WOTWLevelEditor
     public class ObjectType
     {
         public byte Prefix { get; init; }
+        public byte[] Prefix2 { get; init; }
         public string Name { get; init; }
 
         public ObjectType(byte[] pattern)
@@ -20,10 +21,12 @@ namespace WOTWLevelEditor
             byte[] name = pattern[7..23];
             Name = TypeFromBytePattern(name);
             Prefix = pattern[0];
+            Prefix2 = pattern[1..7];
         }
         protected ObjectType() // I don't like this
         {
             Name = "";
+            Prefix2 = new byte[6];
         }
 
         private static string TypeFromBytePattern(byte[] pattern)
@@ -37,6 +40,11 @@ namespace WOTWLevelEditor
                 "FB-F6-B0-31-C3-2E-46-1E-E6-1B-E4-29-E5-FE-E7-EB" => "Capsule Collider",
                 _ => BitConverter.ToString(pattern)
             };
+        }
+
+        public override string ToString()
+        {
+            return BitConverter.ToString(new byte[] { Prefix }) + ", " + BitConverter.ToString(Prefix2) + ", " + Name;
         }
     }
 }

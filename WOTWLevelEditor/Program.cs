@@ -55,7 +55,7 @@ namespace WOTWLevelEditor
             Console.WriteLine("Object types (" + objectTypes.Length + "):");
             foreach(ObjectType i in objectTypes)
             {
-                Console.WriteLine(i.Name + ", " + i.Prefix);
+                Console.WriteLine(i.ToString());
             }
         }
     }

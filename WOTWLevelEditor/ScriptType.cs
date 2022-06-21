@@ -18,9 +18,10 @@ namespace WOTWLevelEditor
             }
             byte[] name = pattern[7..23];
             Name = TypeFromBytePattern(name);
-            byte[] parameters = pattern[17..32];
+            byte[] parameters = pattern[23..39];
             Parameters = ParametersFromBytePattern(parameters);
-            Prefix = pattern[32];
+            Prefix = pattern[0];
+            Prefix2 = pattern[1..7];
         }
 
         private static string TypeFromBytePattern(byte[] pattern)
@@ -35,9 +36,13 @@ namespace WOTWLevelEditor
         {
             return BitConverter.ToString(pattern) switch
             {
-                "71 BB 6A 6B 6C 8F 05 2F 94 8D B6 4C 7D D3 CA 4F" => new(),
-                _ => new()
+                "71-BB-6A-6B-6C-8F-05-2F-94-8D-B6-4C-7D-D3-CA-4F" => new(),
+                _ => new List<Type> { Type.GetType("Type") } // Not sure what to do here
             };
+        }
+        public override string ToString()
+        {
+            return BitConverter.ToString(new byte[] { Prefix }) + ", " + BitConverter.ToString(Prefix2) + ", " + Name + ", " + Parameters.Count;
         }
     }
 }
