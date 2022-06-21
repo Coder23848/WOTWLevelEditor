@@ -68,7 +68,7 @@ namespace WOTWLevelEditor
                 data2List[i] = new Data2(BitConverter.ToInt32(bytes, parserLocation),
                                          BitConverter.ToInt32(bytes, parserLocation + 8),
                                          BitConverter.ToInt32(bytes, parserLocation + 12),
-                                         BitConverter.ToInt32(bytes, parserLocation + 16));
+                                         ObjectTypeList[BitConverter.ToInt32(bytes, parserLocation + 16)].Type);
                 parserLocation += 20;
             }
         }

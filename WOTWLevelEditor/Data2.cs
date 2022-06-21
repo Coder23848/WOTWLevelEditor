@@ -7,9 +7,9 @@ namespace WOTWLevelEditor
         public int ObjectID { get; }
         public int Data3 { get; }
         public int Data4 { get; }
-        public int TypeID { get; }
+        public ObjectTypes TypeID { get; }
 
-        public Data2(int objectID, int data3, int data4, int typeID)
+        public Data2(int objectID, int data3, int data4, ObjectTypes typeID)
         {
             ObjectID = objectID;
             Data3 = data3;
@@ -19,7 +19,7 @@ namespace WOTWLevelEditor
 
         public override string ToString()
         {
-            return BitConverter.ToString(BitConverter.GetBytes(ObjectID)) + ", " + BitConverter.ToString(BitConverter.GetBytes(Data3)) + ", " + BitConverter.ToString(BitConverter.GetBytes(Data4)) + ", " + BitConverter.ToString(BitConverter.GetBytes(TypeID));
+            return BitConverter.ToString(BitConverter.GetBytes(ObjectID)) + ", " + BitConverter.ToString(BitConverter.GetBytes(Data3)) + ", " + BitConverter.ToString(BitConverter.GetBytes(Data4)) + ", " + TypeID.ToString();
         }
     }
 }
