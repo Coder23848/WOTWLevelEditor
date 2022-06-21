@@ -2,14 +2,14 @@
 
 namespace WOTWLevelEditor
 {
-    public class Data2 // Figuring out what this stuff does comes later
+    public class ObjectTypeLink // Figuring out what this stuff does comes later
     {
         public int ObjectID { get; }
         public int Data3 { get; }
         public int Data4 { get; }
         public ObjectTypes TypeID { get; }
 
-        public Data2(int objectID, int data3, int data4, ObjectTypes typeID)
+        public ObjectTypeLink(int objectID, int data3, int data4, ObjectTypes typeID)
         {
             ObjectID = objectID;
             Data3 = data3;

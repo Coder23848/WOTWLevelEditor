@@ -8,9 +8,9 @@ namespace WOTWLevelEditor
 
         public ObjectType[] ObjectTypeList => objectTypeList;
 
-        private Data2[] data2List = Array.Empty<Data2>();
+        private ObjectTypeLink[] objectTypeLinkList = Array.Empty<ObjectTypeLink>();
 
-        public Data2[] Data2List => data2List;
+        public ObjectTypeLink[] ObjectTypeLinkList => objectTypeLinkList;
 
         public Level(byte[] bytes)
         {
@@ -53,7 +53,7 @@ namespace WOTWLevelEditor
                 }
             }
 
-            data2List = new Data2[BitConverter.ToInt32(bytes, parserLocation)];
+            objectTypeLinkList = new ObjectTypeLink[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
             // Return to multiple of 4
@@ -62,10 +62,10 @@ namespace WOTWLevelEditor
                 parserLocation++;
             }
 
-            for (int i = 0; i < data2List.Length; i++)
+            for (int i = 0; i < objectTypeLinkList.Length; i++)
             {
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 4) == 0); // Always 0 for some reason
-                data2List[i] = new Data2(BitConverter.ToInt32(bytes, parserLocation),
+                objectTypeLinkList[i] = new ObjectTypeLink(BitConverter.ToInt32(bytes, parserLocation),
                                          BitConverter.ToInt32(bytes, parserLocation + 8),
                                          BitConverter.ToInt32(bytes, parserLocation + 12),
                                          ObjectTypeList[BitConverter.ToInt32(bytes, parserLocation + 16)].Type);
