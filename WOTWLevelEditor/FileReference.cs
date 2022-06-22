@@ -2,10 +2,12 @@
 {
     public class FileReference
     {
+        public byte[] Data { get; }
         public string Name { get; }
         
-        public FileReference(string name)
+        public FileReference(byte[] data, string name)
         {
+            Data = data;
             Name = name;
         }
 
