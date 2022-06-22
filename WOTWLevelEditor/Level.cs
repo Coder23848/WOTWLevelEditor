@@ -13,6 +13,9 @@ namespace WOTWLevelEditor
         private readonly Data3[] data3List = Array.Empty<Data3>();
         public Data3[] Data3List => data3List;
 
+        private readonly FileReference[] fileReferenceList = Array.Empty<FileReference>();
+        public FileReference[] FileReferenceList => fileReferenceList;
+
         public Level(byte[] bytes)
         {
             int parserLocation = 0;
@@ -82,6 +85,18 @@ namespace WOTWLevelEditor
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0); // Always 0 for some reason
                 data3List[i] = new Data3(BitConverter.ToInt32(bytes, parserLocation + 4));
                 parserLocation += 12;
+            }
+
+            fileReferenceList = new FileReference[BitConverter.ToInt32(bytes, parserLocation)];
+            parserLocation += 4;
+
+            for(int i = 0; i< fileReferenceList.Length; i++)
+            {
+                // Strings appear to be null-terminated here
+                parserLocation += 21;
+                int stringLength = Array.IndexOf(bytes, (byte)0x00, parserLocation) - parserLocation; // Get the length of the string by searching for a null byte; there might be a better way to do it
+                fileReferenceList[i] = new FileReference(System.Text.Encoding.ASCII.GetString(bytes, parserLocation, stringLength));
+                parserLocation += stringLength + 1;
             }
         }
     }
