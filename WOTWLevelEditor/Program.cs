@@ -2,8 +2,6 @@
 {
     class Program
     {
-        public ObjectType[] ObjectTypeList { get; private set; } = Array.Empty<ObjectType>();
-
         static void Main(string[] args)
         {
             if (args.Length == 0) // No file selected
