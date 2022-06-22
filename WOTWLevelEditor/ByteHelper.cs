@@ -8,24 +8,22 @@ namespace WOTWLevelEditor
 {
     public class ByteHelper
     {
-        public static int FindBytes(byte[] array, byte[] search, SearchLocation order, SearchLocation returnIndex)
+        public static int FindBytes(byte[] array, byte[] search, int startIndex)
         {
-            // This is kinda gross, there's probably a better way to do it.
-            string arrayString = BitConverter.ToString(array);
-            string searchString = BitConverter.ToString(search);
-            var index = order switch
+            var len = search.Length;
+            var limit = array.Length - len;
+            for (var i = startIndex; i <= limit; i++)
             {
-                SearchLocation.First => arrayString.IndexOf(searchString) / 3,
-                SearchLocation.Last => arrayString.LastIndexOf(searchString) / 3,
-                _ => throw new NotImplementedException()
-            };
-            return returnIndex switch
-            {
-                SearchLocation.First => index,
-                SearchLocation.Last => index + search.Length - 1,
-                _ => throw new NotImplementedException()
-            };
+                var k = 0;
+                for (; k < len; k++)
+                {
+                    if (search[k] != array[i + k]) break;
+                }
+                if (k == len) return i;
+            }
+            return -1;
         }
+
         public static byte[] GetAtIndex(byte[] array, int index, int length)
         {
             return array[index..(index + length)];

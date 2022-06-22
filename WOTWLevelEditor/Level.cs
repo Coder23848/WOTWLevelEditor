@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using WOTWLevelEditor.Objects;
 
 namespace WOTWLevelEditor
 {
@@ -7,6 +8,12 @@ namespace WOTWLevelEditor
     /// </summary>
     public class Level
     {
+        private readonly int fileLength;
+        /// <summary>
+        /// The length of the level file in bytes.
+        /// </summary>
+        public int FileLength => fileLength;
+
         private readonly ObjectType[] objectTypeList = Array.Empty<ObjectType>();
         /// <summary>
         /// A list of <see cref="ObjectType"/>s that this <see cref="Level"/> uses.
@@ -25,6 +32,9 @@ namespace WOTWLevelEditor
         private readonly FileReference[] fileReferenceList = Array.Empty<FileReference>();
         public FileReference[] FileReferenceList => fileReferenceList;
 
+        private readonly UnityObject[] objectList = Array.Empty<UnityObject>();
+        public UnityObject[] ObjectList => objectList;
+
         /// <summary>
         /// Constructs a level from the contents of a level file.
         /// </summary>
@@ -37,8 +47,7 @@ namespace WOTWLevelEditor
 
             byte[] fileLengthBytes = ByteHelper.GetAtIndex(bytes, 0x4, 4);
             fileLengthBytes = fileLengthBytes.Reverse().ToArray();
-            int FileLength = BitConverter.ToInt32(fileLengthBytes);
-            Console.WriteLine("File Length: " + FileLength + " bytes");
+            fileLength = BitConverter.ToInt32(fileLengthBytes);
             parserLocation += 4;
 
             Debug.Assert(Enumerable.SequenceEqual(ByteHelper.GetAtIndex(bytes, parserLocation, 4), new byte[] { 0x00, 0x00, 0x00, 0x11 })); // Always equals 00-00-00-11
@@ -56,7 +65,7 @@ namespace WOTWLevelEditor
             objectTypeList = new ObjectType[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
-            for (int i = 0; i < objectTypeList.Length; i++)
+            for (int i = 0; i < ObjectTypeList.Length; i++)
             {
                 if (bytes[parserLocation] == (byte)ObjectTypes.MonoBehaviour)
                 {
@@ -79,7 +88,7 @@ namespace WOTWLevelEditor
                 parserLocation++;
             }
 
-            for (int i = 0; i < objectTypeLinkList.Length; i++)
+            for (int i = 0; i < ObjectTypeLinkList.Length; i++)
             {
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 4) == 0); // Always 0 for some reason
                 objectTypeLinkList[i] = new ObjectTypeLink(BitConverter.ToInt32(bytes, parserLocation),
@@ -92,7 +101,7 @@ namespace WOTWLevelEditor
             data3List = new Data3[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
-            for (int i = 0; i< data3List.Length; i++)
+            for (int i = 0; i < Data3List.Length; i++)
             {
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 1); // Always 1 for some reason
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0); // Always 0 for some reason
@@ -103,7 +112,7 @@ namespace WOTWLevelEditor
             fileReferenceList = new FileReference[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
-            for(int i = 0; i< fileReferenceList.Length; i++)
+            for(int i = 0; i < fileReferenceList.Length; i++)
             {
                 byte[] fileReferenceData = ByteHelper.GetAtIndex(bytes, parserLocation, 21); // Not sure what this is, but it looks important
                 parserLocation += 21; 
@@ -117,6 +126,65 @@ namespace WOTWLevelEditor
             while (parserLocation % 16 != 0)
             {
                 parserLocation++;
+            }
+
+            objectList = new UnityObject[ObjectTypeLinkList.Length];
+            for(int i = 0; i < ObjectTypeLinkList.Length; i++)
+            {
+                switch (ObjectTypeLinkList[i].TypeID.Type) // This is probably not the best way to do this...
+                {
+                    case ObjectTypes.Material:
+                        int nameLength = BitConverter.ToInt32(bytes, parserLocation);
+                        parserLocation += 4;
+                        string name = System.Text.Encoding.ASCII.GetString(bytes, parserLocation, nameLength);
+                        parserLocation += nameLength;
+                        // Return to multiple of 4
+                        while (parserLocation % 4 != 0)
+                        {
+                            parserLocation++;
+                        }
+                        int data2 = BitConverter.ToInt32(bytes, parserLocation);
+                        parserLocation += 4;
+                        int data3 = BitConverter.ToInt32(bytes, parserLocation);
+                        parserLocation += 4;
+                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
+                        parserLocation += 4;
+                        int flagsLength = BitConverter.ToInt32(bytes, parserLocation);
+                        parserLocation += 4;
+                        string flags = System.Text.Encoding.ASCII.GetString(bytes, parserLocation, flagsLength);
+                        parserLocation += flagsLength;
+                        // Return to multiple of 4
+                        while (parserLocation % 4 != 0)
+                        {
+                            parserLocation++;
+                        }
+                        Debug.Assert(BitConverter.ToString(ByteHelper.GetAtIndex(bytes, parserLocation, 20)) == "04-00-00-00-00-00-00-00-FF-FF-FF-FF-00-00-00-00-00-00-00-00");
+                        parserLocation += 20;
+
+                        // Currently using a really hacky and unreliable skip to avoid figuring out complicated Material data
+                        int data5Length;
+                        if (ObjectTypeLinkList[i + 1].TypeID.Type != ObjectTypes.Material)
+                        {
+                            data5Length = ByteHelper.FindBytes(bytes, new byte[] { 0x00, 0x00, 0xC8, 0x42 }, parserLocation) + 2 - parserLocation;
+                            
+                        }
+                        else
+                        {
+                            data5Length = ByteHelper.FindBytes(bytes, System.Text.Encoding.ASCII.GetBytes("UBER"), parserLocation) - 4 - parserLocation;
+                        }
+                        if (Enumerable.SequenceEqual(ByteHelper.GetAtIndex(bytes, parserLocation + data5Length, 4), new byte[4]))
+                        {
+                            data5Length += 4;
+                        }
+                        byte[] data5 = ByteHelper.GetAtIndex(bytes, parserLocation, data5Length);
+                        parserLocation += data5Length;
+
+                        objectList[i] = new Material(name, data2, data3, flags, data5);
+                        break;
+                    default:
+                        break;
+                        throw new NotImplementedException("Unsupported Object Type " + ObjectTypeLinkList[i].TypeID.Type.ToString() + " at position " + parserLocation);
+                }
             }
         }
     }

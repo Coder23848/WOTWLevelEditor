@@ -13,6 +13,8 @@
             byte[] bytes = File.ReadAllBytes(args[0]);
             Level level = new(bytes);
 
+            Console.WriteLine("File Length: " + level.FileLength + " bytes");
+
             /*Console.WriteLine("Object types (" + level.ObjectTypeList.Length + "):");
             foreach (ObjectType i in level.ObjectTypeList)
             {
@@ -31,10 +33,23 @@
                 Console.WriteLine("    " + i.ToString());
             }*/
 
-            Console.WriteLine("File References (" + level.FileReferenceList.Length + "):");
+            /*Console.WriteLine("File References (" + level.FileReferenceList.Length + "):");
             foreach (FileReference i in level.FileReferenceList)
             {
                 Console.WriteLine("    " + i.ToString());
+            }*/
+
+            Console.WriteLine("Objects (" + level.ObjectList.Length + "):");
+            foreach (UnityObject i in level.ObjectList)
+            {
+                if (i == null)
+                {
+                    Console.WriteLine("    NULL");
+                }
+                else
+                {
+                    Console.WriteLine("    " + i.ToString());
+                }
             }
         }
     }
