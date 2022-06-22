@@ -1,5 +1,8 @@
 ﻿namespace WOTWLevelEditor
 {
+    /// <summary>
+    /// Represents a Unity script type.
+    /// </summary>
     public class ScriptType : ObjectType
     {
         public string Name { get; }

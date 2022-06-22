@@ -1,12 +1,13 @@
 ﻿namespace WOTWLevelEditor
 {
+    /// <summary>
+    /// Represents a Unity object type.
+    /// </summary>
     public class ObjectType
     {
         public ObjectTypes Type { get; init; }
         public byte[] Prefix { get; init; }
         public byte[] Signature { get; init; }
-
-        
 
         public ObjectType(byte[] pattern)
         {

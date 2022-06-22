@@ -1,5 +1,8 @@
 ﻿namespace WOTWLevelEditor
 {
+    /// <summary>
+    /// A list of Unity object types by ID, taken from <see href="https://docs.unity3d.com/2018.4/Documentation/Manual/ClassIDReference.html"/>.
+    /// </summary>
     public enum ObjectTypes : byte
     {
         Object = 0,

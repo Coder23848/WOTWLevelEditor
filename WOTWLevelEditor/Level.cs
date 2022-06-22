@@ -2,12 +2,21 @@
 
 namespace WOTWLevelEditor
 {
+    /// <summary>
+    /// Represents a Unity scene.
+    /// </summary>
     public class Level
     {
         private readonly ObjectType[] objectTypeList = Array.Empty<ObjectType>();
+        /// <summary>
+        /// A list of <see cref="ObjectType"/>s that this <see cref="Level"/> uses.
+        /// </summary>
         public ObjectType[] ObjectTypeList => objectTypeList;
 
         private readonly ObjectTypeLink[] objectTypeLinkList = Array.Empty<ObjectTypeLink>();
+        /// <summary>
+        /// A list of <see cref="ObjectTypeLink"/>s that represent the objects in this <see cref="Level"/>.
+        /// </summary>
         public ObjectTypeLink[] ObjectTypeLinkList => objectTypeLinkList;
 
         private readonly Data3[] data3List = Array.Empty<Data3>();
@@ -16,6 +25,10 @@ namespace WOTWLevelEditor
         private readonly FileReference[] fileReferenceList = Array.Empty<FileReference>();
         public FileReference[] FileReferenceList => fileReferenceList;
 
+        /// <summary>
+        /// Constructs a level from the contents of a level file.
+        /// </summary>
+        /// <param name="bytes">A byte array representing the contents of a level file.</param>
         public Level(byte[] bytes)
         {
             int parserLocation = 0;
