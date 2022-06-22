@@ -98,6 +98,12 @@ namespace WOTWLevelEditor
                 fileReferenceList[i] = new FileReference(System.Text.Encoding.ASCII.GetString(bytes, parserLocation, stringLength));
                 parserLocation += stringLength + 1;
             }
+
+            // Return to multiple of 16
+            while (parserLocation % 16 != 0)
+            {
+                parserLocation++;
+            }
         }
     }
 }

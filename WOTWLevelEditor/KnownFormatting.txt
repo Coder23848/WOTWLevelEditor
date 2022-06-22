@@ -21,6 +21,7 @@ unknown data list [
 ]
 <number of external file references>
 <list of external file references, separated by 22 null bytes>
+<pad out to multiple of 16 with null bytes>
 objects [
 	Box Collider => <isTrigger><unknown, 3 bytes><sizeX><sizeY><sizeZ><positionX><positionY><positionZ>
 	Capsule Collider => <isTrigger><unknown, 3 bytes><radius><height><direction><positionX><positionY><positionZ>
