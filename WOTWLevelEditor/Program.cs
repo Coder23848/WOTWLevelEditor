@@ -21,8 +21,14 @@
                 Console.WriteLine("    " + i.ToString());
             }*/
 
-            Console.WriteLine("Object type links (" + level.ObjectTypeLinkList.Length + "):");
+            /*Console.WriteLine("Object type links (" + level.ObjectTypeLinkList.Length + "):");
             foreach (ObjectTypeLink i in level.ObjectTypeLinkList)
+            {
+                Console.WriteLine("    " + i.ToString());
+            }*/
+
+            Console.WriteLine("Data list 3 (" + level.Data3List.Length + "):");
+            foreach (Data3 i in level.Data3List)
             {
                 Console.WriteLine("    " + i.ToString());
             }

@@ -10,6 +10,9 @@ namespace WOTWLevelEditor
         private readonly ObjectTypeLink[] objectTypeLinkList = Array.Empty<ObjectTypeLink>();
         public ObjectTypeLink[] ObjectTypeLinkList => objectTypeLinkList;
 
+        private readonly Data3[] data3List = Array.Empty<Data3>();
+        public Data3[] Data3List => data3List;
+
         public Level(byte[] bytes)
         {
             int parserLocation = 0;
@@ -68,6 +71,17 @@ namespace WOTWLevelEditor
                                          BitConverter.ToInt32(bytes, parserLocation + 12),
                                          ObjectTypeList[BitConverter.ToInt32(bytes, parserLocation + 16)]);
                 parserLocation += 20;
+            }
+
+            data3List = new Data3[BitConverter.ToInt32(bytes, parserLocation)];
+            parserLocation += 4;
+
+            for (int i = 0; i< data3List.Length; i++)
+            {
+                Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 1); // Always 1 for some reason
+                Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0); // Always 0 for some reason
+                data3List[i] = new Data3(BitConverter.ToInt32(bytes, parserLocation + 4));
+                parserLocation += 12;
             }
         }
     }
