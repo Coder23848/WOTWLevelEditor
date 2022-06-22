@@ -15,8 +15,12 @@ Object types [
 ID data [ 
 	<ID><00-00-00-00><unknown, 8 bytes><objectTypeID>
 ]
-<unknown>
-<list of external file references?, seperated by 22 null bytes>
+<length of unknown data list>
+unknown data list [
+	<01-00-00-00><unknown, 4 bytes><00-00-00-00>
+]
+<number of external file references>
+<list of external file references, separated by 22 null bytes>
 objects [
 	Box Collider => <isTrigger><unknown, 3 bytes><sizeX><sizeY><sizeZ><positionX><positionY><positionZ>
 	Capsule Collider => <isTrigger><unknown, 3 bytes><radius><height><direction><positionX><positionY><positionZ>
