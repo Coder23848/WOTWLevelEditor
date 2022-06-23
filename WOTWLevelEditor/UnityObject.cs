@@ -1,6 +1,6 @@
 ﻿namespace WOTWLevelEditor
 {
-    public abstract class UnityObject
+    public class UnityObject
     {
     }
 }

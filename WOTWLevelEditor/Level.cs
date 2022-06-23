@@ -128,86 +128,16 @@ namespace WOTWLevelEditor
                 parserLocation++;
             }
 
+            int objectListStart = parserLocation;
             objectList = new UnityObject[ObjectTypeLinkList.Length];
             for(int i = 0; i < ObjectTypeLinkList.Length; i++)
             {
-                switch (ObjectTypeLinkList[i].TypeID.Type) // This is probably not the best way to do this...
+                int len = ObjectTypeLinkList[i].Length;
+                switch (ObjectTypeLinkList[i].TypeID.Type)
                 {
-                    case ObjectTypes.Material:
-                        int nameLength = BitConverter.ToInt32(bytes, parserLocation);
-                        parserLocation += 4;
-                        string name = System.Text.Encoding.ASCII.GetString(bytes, parserLocation, nameLength);
-                        parserLocation += nameLength;
-                        // Return to multiple of 4
-                        while (parserLocation % 4 != 0)
-                        {
-                            parserLocation++;
-                        }
-                        int data2 = BitConverter.ToInt32(bytes, parserLocation);
-                        parserLocation += 4;
-                        int data3 = BitConverter.ToInt32(bytes, parserLocation);
-                        parserLocation += 4;
-                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
-                        parserLocation += 4;
-                        int flagsLength = BitConverter.ToInt32(bytes, parserLocation);
-                        parserLocation += 4;
-                        string flags = System.Text.Encoding.ASCII.GetString(bytes, parserLocation, flagsLength);
-                        parserLocation += flagsLength;
-                        // Return to multiple of 4
-                        while (parserLocation % 4 != 0)
-                        {
-                            parserLocation++;
-                        }
-                        Debug.Assert(BitConverter.ToString(ByteHelper.GetAtIndex(bytes, parserLocation, 20)) == "04-00-00-00-00-00-00-00-FF-FF-FF-FF-00-00-00-00-00-00-00-00");
-                        parserLocation += 20;
-
-                        // Currently using a really hacky and unreliable skip to avoid figuring out complicated Material data
-                        int data5Length;
-                        if (ObjectTypeLinkList[i + 1].TypeID.Type != ObjectTypes.Material)
-                        {
-                            data5Length = ByteHelper.FindBytes(bytes, new byte[] { 0x00, 0x00, 0xC8, 0x42 }, parserLocation) + 4 - parserLocation;
-                            
-                        }
-                        else
-                        {
-                            data5Length = ByteHelper.FindBytes(bytes, System.Text.Encoding.ASCII.GetBytes("UBER"), parserLocation) - 4 - parserLocation;
-                        }
-                        if (Enumerable.SequenceEqual(ByteHelper.GetAtIndex(bytes, parserLocation + data5Length, 4), new byte[4]))
-                        {
-                            data5Length += 4;
-                        }
-                        byte[] data5 = ByteHelper.GetAtIndex(bytes, parserLocation, data5Length);
-                        parserLocation += data5Length;
-
-                        objectList[i] = new Material(name, data2, data3, flags, data5);
+                    case ObjectTypes.GameObject:
+                        objectList[i] = Transform.Parse(ByteHelper.GetAtIndex(bytes, objectListStart + ObjectTypeLinkList[i].Position, len));
                         break;
-                    case ObjectTypes.Mesh:
-                        nameLength = BitConverter.ToInt32(bytes, parserLocation);
-                        parserLocation += 4;
-                        name = System.Text.Encoding.ASCII.GetString(bytes, parserLocation, nameLength);
-                        parserLocation += nameLength;
-                        // Return to multiple of 4
-                        while (parserLocation % 4 != 0)
-                        {
-                            parserLocation++;
-                        }
-                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 1); // Always 1 for some reason
-                        parserLocation += 4;
-                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
-                        parserLocation += 4;
-                        int data1 = BitConverter.ToInt32(bytes, parserLocation);
-                        parserLocation += 4;
-                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
-                        parserLocation += 4;
-                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
-                        parserLocation += 4;
-                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
-                        parserLocation += 4;
-                        data2 = BitConverter.ToInt32(bytes, parserLocation);
-                        parserLocation += 4;
-
-                        objectList[i] = new Mesh(name, data1, data2);
-                        return;
                     default:
                         break;
                         throw new NotImplementedException("Unsupported Object Type " + ObjectTypeLinkList[i].TypeID.Type.ToString() + " at position " + parserLocation);

@@ -13,7 +13,7 @@ Object types [
 <number of object IDs>
 <pad out to multiple of 4 with null bytes>
 ID data [ 
-	<ID><00-00-00-00><unknown, 8 bytes><objectTypeID>
+	<ID><00-00-00-00><position of object in file compared to the start of the object list><number of bytes in object><objectTypeID>
 ]
 <length of unknown data list>
 unknown data list [
