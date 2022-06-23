@@ -48,7 +48,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("    " + level.ObjectTypeLinkList[i].TypeID.ToString() + ": " + level.ObjectList[i].ToString());
+                    Console.WriteLine("    " + level.ObjectTypeLinkList[i].TypeID.ToString() + " " + level.ObjectTypeLinkList[i].ObjectID.ToString() + ": " + level.ObjectList[i].ToString());
                 }
             }
         }

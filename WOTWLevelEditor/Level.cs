@@ -136,8 +136,10 @@ namespace WOTWLevelEditor
                 switch (ObjectTypeLinkList[i].TypeID.Type)
                 {
                     case ObjectTypes.GameObject:
-                        //Console.WriteLine(BitConverter.ToString(objectData));
                         objectList[i] = GameObject.Parse(objectData);
+                        break;
+                    case ObjectTypes.Transform:
+                        objectList[i] = Transform.Parse(objectData);
                         break;
                     default:
                         break;
