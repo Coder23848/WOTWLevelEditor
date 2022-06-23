@@ -43,6 +43,9 @@ namespace WOTWLevelEditor
         {
             int parserLocation = 0;
 
+            byte[] unknownBytes = ByteHelper.GetAtIndex(bytes, parserLocation, 4);
+            unknownBytes = unknownBytes.Reverse().ToArray();
+            int unknown = BitConverter.ToInt32(unknownBytes);
             parserLocation += 4; // Unknown bytes
 
             byte[] fileLengthBytes = ByteHelper.GetAtIndex(bytes, parserLocation, 4);
