@@ -12,7 +12,7 @@ namespace WOTWLevelEditor.Objects
         public int[] ChildrenIDs { get; }
         public int ParentID { get; }
 
-        public Transform(int gameObjectID, Quaternion rotation, Vector3 position, Vector3 scale, int[] childrenIDs, int parentID)
+        public Transform(Level level, int id, int gameObjectID, Quaternion rotation, Vector3 position, Vector3 scale, int[] childrenIDs, int parentID) : base(level, id)
         {
             GameObjectID = gameObjectID;
             Rotation = rotation;
@@ -22,7 +22,7 @@ namespace WOTWLevelEditor.Objects
             ParentID = parentID;
         }
 
-        public static Transform Parse(byte[] bytes)
+        public static Transform Parse(Level level, int id, byte[] bytes)
         {
             Debug.Assert(BitConverter.ToInt32(bytes, 0) == 0);
             int gameObjectID = BitConverter.ToInt32(bytes, 4);
@@ -49,7 +49,7 @@ namespace WOTWLevelEditor.Objects
             Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0);
             int parentID = BitConverter.ToInt32(bytes, parserLocation + 4);
             Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0);
-            return new Transform(gameObjectID, rotation, position, scale, childrenIDs, parentID);
+            return new Transform(level, id, gameObjectID, rotation, position, scale, childrenIDs, parentID);
         }
 
         public override string ToString()

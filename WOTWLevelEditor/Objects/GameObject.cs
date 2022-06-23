@@ -10,7 +10,7 @@ namespace WOTWLevelEditor.Objects
         public string Name { get; }
         public bool Enabled { get; }
 
-        public GameObject(int[] componentIDs, int data2, int data3, string name, bool enabled)
+        public GameObject(Level level, int id, int[] componentIDs, int data2, int data3, string name, bool enabled) : base(level, id)
         {
             ComponentIDs = componentIDs;
             Data2 = data2;
@@ -19,7 +19,7 @@ namespace WOTWLevelEditor.Objects
             Enabled = enabled;
         }
 
-        public static GameObject Parse(byte[] bytes)
+        public static GameObject Parse(Level level, int id, byte[] bytes)
         {
             int[] componentIDs = new int[BitConverter.ToInt32(bytes, 0)];
             int parserLocation = 4;
@@ -44,7 +44,7 @@ namespace WOTWLevelEditor.Objects
             }
             parserLocation += 2;
             bool enabled = BitConverter.ToBoolean(bytes, parserLocation);
-            return new GameObject(componentIDs, data2, data3, name, enabled);
+            return new GameObject(level, id, componentIDs, data2, data3, name, enabled);
         }
 
         public override string ToString()

@@ -45,7 +45,7 @@ namespace WOTWLevelEditor
 
             parserLocation += 4; // Unknown bytes
 
-            byte[] fileLengthBytes = ByteHelper.GetAtIndex(bytes, 0x4, 4);
+            byte[] fileLengthBytes = ByteHelper.GetAtIndex(bytes, parserLocation, 4);
             fileLengthBytes = fileLengthBytes.Reverse().ToArray();
             fileLength = BitConverter.ToInt32(fileLengthBytes);
             parserLocation += 4;
@@ -53,7 +53,10 @@ namespace WOTWLevelEditor
             Debug.Assert(Enumerable.SequenceEqual(ByteHelper.GetAtIndex(bytes, parserLocation, 4), new byte[] { 0x00, 0x00, 0x00, 0x11 })); // Always equals 00-00-00-11
             parserLocation += 4;
 
-            parserLocation += 4; // Unknown bytes
+            byte[] objectStartBytes = ByteHelper.GetAtIndex(bytes, parserLocation, 4);
+            objectStartBytes = objectStartBytes.Reverse().ToArray();
+            int objectStartLocation = BitConverter.ToInt32(objectStartBytes);
+            parserLocation += 4;
 
             Debug.Assert(Enumerable.SequenceEqual(ByteHelper.GetAtIndex(bytes, parserLocation, 16), System.Text.Encoding.ASCII.GetBytes("\0\0\0\02018.4.24f1\0"))); // Always equals "\0\0\0\02018.4.24f1\0"
             parserLocation += 16;
@@ -128,18 +131,17 @@ namespace WOTWLevelEditor
                 parserLocation++;
             }
 
-            int objectListStart = parserLocation;
             objectList = new UnityObject[ObjectTypeLinkList.Length];
             for(int i = 0; i < ObjectTypeLinkList.Length; i++)
             {
-                byte[] objectData = ByteHelper.GetAtIndex(bytes, objectListStart + ObjectTypeLinkList[i].Position, ObjectTypeLinkList[i].Length);
+                byte[] objectData = ByteHelper.GetAtIndex(bytes, objectStartLocation + ObjectTypeLinkList[i].Position, ObjectTypeLinkList[i].Length);
                 switch (ObjectTypeLinkList[i].TypeID.Type)
                 {
                     case ObjectTypes.GameObject:
-                        objectList[i] = GameObject.Parse(objectData);
+                        objectList[i] = GameObject.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData);
                         break;
                     case ObjectTypes.Transform:
-                        objectList[i] = Transform.Parse(objectData);
+                        objectList[i] = Transform.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData);
                         break;
                     default:
                         break;

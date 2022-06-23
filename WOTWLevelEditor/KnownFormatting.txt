@@ -1,7 +1,7 @@
 ﻿<unknown, 4 bytes>
 <file length, big-endian>
 <00-00-00-11>
-<unknown, 4 bytes>
+<position of the first object in the file, big-endian>
 <00-00-00-00>
 <"2018.4.24f1"><00>
 <13-00-00-00-00>
@@ -23,11 +23,5 @@ unknown data list [
 <list of external file references, separated by 22 null bytes>
 <pad out to multiple of 16 with null bytes>
 objects [
-	Box Collider => <isTrigger><unknown, 3 bytes><sizeX><sizeY><sizeZ><positionX><positionY><positionZ>
-	Capsule Collider => <isTrigger><unknown, 3 bytes><radius><height><direction><positionX><positionY><positionZ>
-	Character Controller => <height><radius><slopeLimit><stepOffset><skinWidth><minMoveDistance><positionX><positionY><positionZ>
-	GameObject => <unknown, 8 bytes><component list?: [<ID><unknown, 8 bytes>]><number of characters in object name><object name in ASCII>
-	Rigidbody => <mass><drag><angularDrag><useGravity><isKinematic><interpolate><constraints><collisionDetection>
-	Transform => <rotationW><rotationX><rotationY><rotationZ><positionX><positionY><positionZ><scaleX><scaleY><scaleZ>
 ]
 <unknown>

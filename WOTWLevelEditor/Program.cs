@@ -27,11 +27,11 @@
                 Console.WriteLine("    " + i.ToString());
             }*/
 
-            /*Console.WriteLine("Data list 3 (" + level.Data3List.Length + "):");
+            Console.WriteLine("Data list 3 (" + level.Data3List.Length + "):");
             foreach (Data3 i in level.Data3List)
             {
                 Console.WriteLine("    " + i.ToString());
-            }*/
+            }
 
             /*Console.WriteLine("File References (" + level.FileReferenceList.Length + "):");
             foreach (FileReference i in level.FileReferenceList)
