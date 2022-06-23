@@ -4,15 +4,15 @@ namespace WOTWLevelEditor.Objects
 {
     public class GameObject : UnityObject
     {
-        public int[] Data1 { get; }
+        public int[] ComponentIDs { get; }
         public int Data2 { get; }
         public int Data3 { get; }
         public string Name { get; }
         public bool Enabled { get; }
 
-        public GameObject(int[] data1, int data2, int data3, string name, bool enabled)
+        public GameObject(int[] componentIDs, int data2, int data3, string name, bool enabled)
         {
-            Data1 = data1;
+            ComponentIDs = componentIDs;
             Data2 = data2;
             Data3 = data3;
             Name = name;
@@ -21,12 +21,12 @@ namespace WOTWLevelEditor.Objects
 
         public static GameObject Parse(byte[] bytes)
         {
-            int[] data1 = new int[BitConverter.ToInt32(bytes, 0)];
+            int[] componentIDs = new int[BitConverter.ToInt32(bytes, 0)];
             int parserLocation = 4;
-            for (int i = 0; i < data1.Length; i++)
+            for (int i = 0; i < componentIDs.Length; i++)
             {
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0);
-                data1[i] = BitConverter.ToInt32(bytes, parserLocation + 4);
+                componentIDs[i] = BitConverter.ToInt32(bytes, parserLocation + 4);
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0);
                 parserLocation += 12;
             }
@@ -44,12 +44,12 @@ namespace WOTWLevelEditor.Objects
             }
             parserLocation += 2;
             bool enabled = BitConverter.ToBoolean(bytes, parserLocation);
-            return new GameObject(data1, data2, data3, name, enabled);
+            return new GameObject(componentIDs, data2, data3, name, enabled);
         }
 
         public override string ToString()
         {
-            return string.Join(", ", string.Join("-", Data1), Data2, Data3, Name, Enabled);
+            return string.Join(", ", string.Join("-", ComponentIDs), Data2, Data3, Name, Enabled);
         }
     }
 }
