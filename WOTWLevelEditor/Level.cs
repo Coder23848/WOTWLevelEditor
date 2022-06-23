@@ -132,11 +132,12 @@ namespace WOTWLevelEditor
             objectList = new UnityObject[ObjectTypeLinkList.Length];
             for(int i = 0; i < ObjectTypeLinkList.Length; i++)
             {
-                int len = ObjectTypeLinkList[i].Length;
+                byte[] objectData = ByteHelper.GetAtIndex(bytes, objectListStart + ObjectTypeLinkList[i].Position, ObjectTypeLinkList[i].Length);
                 switch (ObjectTypeLinkList[i].TypeID.Type)
                 {
                     case ObjectTypes.GameObject:
-                        objectList[i] = Transform.Parse(ByteHelper.GetAtIndex(bytes, objectListStart + ObjectTypeLinkList[i].Position, len));
+                        //Console.WriteLine(BitConverter.ToString(objectData));
+                        objectList[i] = GameObject.Parse(objectData);
                         break;
                     default:
                         break;

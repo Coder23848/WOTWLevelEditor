@@ -39,18 +39,18 @@
                 Console.WriteLine("    " + i.ToString());
             }*/
 
-            /*Console.WriteLine("Objects (" + level.ObjectList.Length + "):");
-            foreach (UnityObject i in level.ObjectList)
+            Console.WriteLine("Objects (" + level.ObjectList.Length + "):");
+            for (int i = 0; i < level.ObjectList.Length; i++)
             {
-                if (i == null)
+                if (level.ObjectList[i] == null)
                 {
-                    Console.WriteLine("    NULL");
+                    Console.WriteLine("    Unknown " + level.ObjectTypeLinkList[i].TypeID.ToString());
                 }
                 else
                 {
-                    Console.WriteLine("    " + i.ToString());
+                    Console.WriteLine("    " + level.ObjectTypeLinkList[i].TypeID.ToString() + ": " + level.ObjectList[i].ToString());
                 }
-            }*/
+            }
         }
     }
 }
