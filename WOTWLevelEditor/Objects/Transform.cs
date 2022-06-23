@@ -5,12 +5,15 @@ namespace WOTWLevelEditor.Objects
 {
     public class Transform : UnityObject
     {
+        public override ObjectTypes Type => ObjectTypes.Transform;
         public int GameObjectID { get; }
         public Quaternion Rotation { get; }
         public Vector3 Position { get; }
         public Vector3 Scale { get; }
         public int[] ChildrenIDs { get; }
         public int ParentID { get; }
+        public GameObject ThisGameObject => (GameObject)ParentLevel.FindObjectByID(GameObjectID);
+        public Transform Parent => (Transform)ParentLevel.FindObjectByID(ParentID);
 
         public Transform(Level level, int id, int gameObjectID, Quaternion rotation, Vector3 position, Vector3 scale, int[] childrenIDs, int parentID) : base(level, id)
         {
@@ -50,6 +53,11 @@ namespace WOTWLevelEditor.Objects
             int parentID = BitConverter.ToInt32(bytes, parserLocation + 4);
             Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0);
             return new Transform(level, id, gameObjectID, rotation, position, scale, childrenIDs, parentID);
+        }
+
+        public Transform GetChild(int id)
+        {
+            return (Transform)ParentLevel.FindObjectByID(ChildrenIDs[id]);
         }
 
         public override string ToString()

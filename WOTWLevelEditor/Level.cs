@@ -22,7 +22,7 @@ namespace WOTWLevelEditor
 
         private readonly ObjectTypeLink[] objectTypeLinkList = Array.Empty<ObjectTypeLink>();
         /// <summary>
-        /// A list of <see cref="ObjectTypeLink"/>s that represent the objects in this <see cref="Level"/>.
+        /// A list of <see cref="ObjectTypeLink"/>s that represent the <see cref="UnityObject"/>s in this <see cref="Level"/>.
         /// </summary>
         public ObjectTypeLink[] ObjectTypeLinkList => objectTypeLinkList;
 
@@ -33,6 +33,9 @@ namespace WOTWLevelEditor
         public FileReference[] FileReferenceList => fileReferenceList;
 
         private readonly UnityObject[] objectList = Array.Empty<UnityObject>();
+        /// <summary>
+        /// A list of <see cref="UnityObject"/>s in this <see cref="Level"/>.
+        /// </summary>
         public UnityObject[] ObjectList => objectList;
 
         /// <summary>
@@ -151,6 +154,19 @@ namespace WOTWLevelEditor
                         throw new NotImplementedException("Unsupported Object Type " + ObjectTypeLinkList[i].TypeID.Type.ToString() + " at position " + parserLocation);
                 }
             }
+        }
+
+        public UnityObject FindObjectByID(int id)
+        {
+            if (id == 0) return null;
+            foreach (UnityObject obj in objectList)
+            {
+                if (obj != null && obj.ID == id)
+                {
+                    return obj;
+                }
+            }
+            throw new IndexOutOfRangeException("Object with ID " + id + " does not exist.");
         }
     }
 }

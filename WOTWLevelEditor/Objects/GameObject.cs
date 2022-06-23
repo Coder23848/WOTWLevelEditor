@@ -4,11 +4,13 @@ namespace WOTWLevelEditor.Objects
 {
     public class GameObject : UnityObject
     {
+        public override ObjectTypes Type => ObjectTypes.GameObject;
         public int[] ComponentIDs { get; }
         public int Data2 { get; }
         public int Data3 { get; }
         public string Name { get; }
         public bool Enabled { get; }
+        public Transform ThisTransform => (Transform)ParentLevel.FindObjectByID(ComponentIDs[0]);
 
         public GameObject(Level level, int id, int[] componentIDs, int data2, int data3, string name, bool enabled) : base(level, id)
         {
@@ -45,6 +47,11 @@ namespace WOTWLevelEditor.Objects
             parserLocation += 2;
             bool enabled = BitConverter.ToBoolean(bytes, parserLocation);
             return new GameObject(level, id, componentIDs, data2, data3, name, enabled);
+        }
+
+        public UnityObject GetComponent(int id)
+        {
+            return ParentLevel.FindObjectByID(ComponentIDs[id]);
         }
 
         public override string ToString()
