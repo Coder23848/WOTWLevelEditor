@@ -165,7 +165,7 @@ namespace WOTWLevelEditor
                         int data5Length;
                         if (ObjectTypeLinkList[i + 1].TypeID.Type != ObjectTypes.Material)
                         {
-                            data5Length = ByteHelper.FindBytes(bytes, new byte[] { 0x00, 0x00, 0xC8, 0x42 }, parserLocation) + 2 - parserLocation;
+                            data5Length = ByteHelper.FindBytes(bytes, new byte[] { 0x00, 0x00, 0xC8, 0x42 }, parserLocation) + 4 - parserLocation;
                             
                         }
                         else
@@ -181,6 +181,33 @@ namespace WOTWLevelEditor
 
                         objectList[i] = new Material(name, data2, data3, flags, data5);
                         break;
+                    case ObjectTypes.Mesh:
+                        nameLength = BitConverter.ToInt32(bytes, parserLocation);
+                        parserLocation += 4;
+                        name = System.Text.Encoding.ASCII.GetString(bytes, parserLocation, nameLength);
+                        parserLocation += nameLength;
+                        // Return to multiple of 4
+                        while (parserLocation % 4 != 0)
+                        {
+                            parserLocation++;
+                        }
+                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 1); // Always 1 for some reason
+                        parserLocation += 4;
+                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
+                        parserLocation += 4;
+                        int data1 = BitConverter.ToInt32(bytes, parserLocation);
+                        parserLocation += 4;
+                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
+                        parserLocation += 4;
+                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
+                        parserLocation += 4;
+                        Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0); // Always 0 for some reason
+                        parserLocation += 4;
+                        data2 = BitConverter.ToInt32(bytes, parserLocation);
+                        parserLocation += 4;
+
+                        objectList[i] = new Mesh(name, data1, data2);
+                        return;
                     default:
                         break;
                         throw new NotImplementedException("Unsupported Object Type " + ObjectTypeLinkList[i].TypeID.Type.ToString() + " at position " + parserLocation);
