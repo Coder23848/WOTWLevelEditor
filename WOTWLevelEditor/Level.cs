@@ -32,11 +32,11 @@ namespace WOTWLevelEditor
         private readonly FileReference[] fileReferenceList = Array.Empty<FileReference>();
         public FileReference[] FileReferenceList => fileReferenceList;
 
-        private readonly UnityObject[] objectList = Array.Empty<UnityObject>();
+        private readonly List<UnityObject> objectList = new();
         /// <summary>
         /// A list of <see cref="UnityObject"/>s in this <see cref="Level"/>.
         /// </summary>
-        public UnityObject[] ObjectList => objectList;
+        public List<UnityObject> ObjectList => objectList;
 
         /// <summary>
         /// Constructs a level from the contents of a level file.
@@ -137,20 +137,20 @@ namespace WOTWLevelEditor
                 parserLocation++;
             }
 
-            objectList = new UnityObject[ObjectTypeLinkList.Length];
+            objectList = new(ObjectTypeLinkList.Length);
             for(int i = 0; i < ObjectTypeLinkList.Length; i++)
             {
                 byte[] objectData = ByteHelper.GetAtIndex(bytes, objectStartLocation + ObjectTypeLinkList[i].Position, ObjectTypeLinkList[i].Length);
                 switch (ObjectTypeLinkList[i].TypeID.Type)
                 {
                     case ObjectTypes.GameObject:
-                        objectList[i] = GameObject.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData);
+                        objectList.Add(GameObject.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData));
                         break;
                     case ObjectTypes.Transform:
-                        objectList[i] = Transform.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData);
+                        objectList.Add(Transform.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData));
                         break;
                     default:
-                        objectList[i] = UnknownFallback.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData);
+                        objectList.Add(UnknownFallback.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData));
                         break;
                 }
             }

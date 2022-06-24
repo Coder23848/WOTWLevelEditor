@@ -41,8 +41,8 @@ namespace WOTWLevelEditor
                 Console.WriteLine("    " + i.ToString());
             }*/
 
-            Console.WriteLine("Objects (" + level.ObjectList.Length + "):");
-            for (int i = 0; i < level.ObjectList.Length; i++)
+            Console.WriteLine("Objects (" + level.ObjectList.Count + "):");
+            for (int i = 0; i < level.ObjectList.Count; i++)
             {
                 if (level.ObjectList[i] == null)
                 {
