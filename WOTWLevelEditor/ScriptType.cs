@@ -5,8 +5,7 @@
     /// </summary>
     public class ScriptType : ObjectType
     {
-        public string Name { get; }
-        public string Parameters { get; }
+        byte[] Pattern { get; }
 
         public ScriptType(byte[] pattern)
         {
@@ -14,10 +13,7 @@
             {
                 throw new ArgumentException("Pattern length is 39, not " + pattern.Length);
             }
-            byte[] name = pattern[7..23];
-            Name = NameFromBytePattern(name);
-            byte[] parameters = pattern[23..39];
-            Parameters = ParametersFromBytePattern(parameters);
+            Pattern = pattern[7..39];
             Type = (ObjectTypes)pattern[0];
             Prefix = pattern[1..7];
         }
@@ -40,7 +36,7 @@
         }
         public override string ToString()
         {
-            return Name + Parameters;
+            return "[" + BitConverter.ToString(Pattern) + "]";
         }
     }
 }
