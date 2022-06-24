@@ -11,6 +11,12 @@
             ThisType = type;
             ID = id;
         }
+
+        public virtual byte[] Encode()
+        {
+            throw new NotImplementedException(ToString() + " cannot be encoded.");
+        }
+
         public override string ToString()
         {
             return GetType().Name;

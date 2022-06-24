@@ -16,6 +16,10 @@
             return new UnknownFallback(level, type, id, bytes);
         }
 
+        public override byte[] Encode()
+        {
+            return Data;
+        }
         public override string ToString()
         {
             return "Unknown";

@@ -8,6 +8,10 @@ namespace WOTWLevelEditor
     /// </summary>
     public class Level
     {
+        // These two are only used because I haven't yet figured out how to calculate them from the object list.
+        private readonly List<Data3> data3List = new();
+        private readonly List<FileReference> fileReferenceList = new();
+
         private readonly List<UnityObject> objectList = new();
 
         /// <summary>
@@ -75,6 +79,7 @@ namespace WOTWLevelEditor
                 objectTypeLinkList[i] = new ObjectTypeLink(BitConverter.ToInt32(bytes, parserLocation),
                                          BitConverter.ToInt32(bytes, parserLocation + 8),
                                          BitConverter.ToInt32(bytes, parserLocation + 12),
+                                         BitConverter.ToInt32(bytes, parserLocation + 16),
                                          objectTypeList[BitConverter.ToInt32(bytes, parserLocation + 16)]);
                 parserLocation += 20;
             }
@@ -90,6 +95,8 @@ namespace WOTWLevelEditor
                 parserLocation += 12;
             }
 
+            this.data3List = data3List.ToList();
+
             FileReference[] fileReferenceList = new FileReference[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
@@ -102,6 +109,8 @@ namespace WOTWLevelEditor
                 fileReferenceList[i] = new FileReference(fileReferenceData, System.Text.Encoding.ASCII.GetString(bytes, parserLocation, stringLength));
                 parserLocation += stringLength + 1;
             }
+
+            this.fileReferenceList = fileReferenceList.ToList();
 
             // Return to multiple of 16
             while (parserLocation % 16 != 0)
@@ -128,9 +137,123 @@ namespace WOTWLevelEditor
             }
         }
 
+        public byte[] Encode()
+        {
+            List<byte> bytes = new();
+
+            List<ObjectType> newObjectTypeList = new();
+            List<ObjectTypeLink> newObjectTypeLinkList = new();
+            List<byte[]> encodedObjectList = new();
+
+            bytes.AddRange(new byte[4]); // To replace later
+            bytes.AddRange(new byte[4]); // To replace later
+            bytes.AddRange(new byte[] { 0x00, 0x00, 0x00, 0x11 });
+            bytes.AddRange(new byte[4]); // To replace later
+            bytes.AddRange(System.Text.Encoding.ASCII.GetBytes("\0\0\0\02018.4.24f1\0"));
+            bytes.AddRange(new byte[] { 0x13, 0x00, 0x00, 0x00, 0x00 });
+
+            int objectLocation = 0;
+            foreach (UnityObject i in objectList)
+            {
+                bool alreadyInList = false;
+                int thisTypeID = -1;
+                // Set up the corresponding type in the type list, if needed
+                for (int j = 0; j < newObjectTypeList.Count; j++)
+                {
+                    if (i.ThisType.Equals(newObjectTypeList[j]))
+                    {
+                        alreadyInList = true;
+                        thisTypeID = j;
+                        break;
+                    }
+                }
+                if (!alreadyInList)
+                {
+                    newObjectTypeList.Add(i.ThisType);
+                    thisTypeID = newObjectTypeList.Count - 1;
+                }
+                byte[] encoded = i.Encode();
+                int objectLength = encoded.Length;
+                // Return to multiple of 4
+                while (objectLength % 4 != 0)
+                {
+                    objectLength++;
+                }
+                // Set up the object's type link
+                newObjectTypeLinkList.Add(new(i.ID, objectLocation, objectLength, thisTypeID, i.ThisType));
+                objectLocation += objectLength;
+                // Set up the object data
+                encodedObjectList.Add(encoded);
+            }
+
+            // Add the type list
+            bytes.AddRange(BitConverter.GetBytes(newObjectTypeList.Count));
+            foreach (ObjectType i in newObjectTypeList)
+            {
+                bytes.AddRange(i.Encode());
+            }
+
+            // Add the type link list
+            bytes.AddRange(BitConverter.GetBytes(newObjectTypeLinkList.Count));
+            // Return to multiple of 4
+            while (bytes.Count % 4 != 0)
+            {
+                bytes.Add(0);
+            }
+            foreach (ObjectTypeLink i in newObjectTypeLinkList)
+            {
+                bytes.AddRange(i.Encode());
+            }
+
+            // Add back the Data3 list
+            bytes.AddRange(BitConverter.GetBytes(data3List.Count));
+            foreach (Data3 i in data3List)
+            {
+                bytes.AddRange(i.Encode());
+            }
+
+            // Add back the File Reference list
+            bytes.AddRange(BitConverter.GetBytes(fileReferenceList.Count));
+            foreach (FileReference i in fileReferenceList)
+            {
+                bytes.AddRange(i.Encode());
+            }
+
+            // Return to multiple of 16
+            while (bytes.Count % 16 != 0)
+            {
+                bytes.Add(0);
+            }
+
+            int objectStartPosition = bytes.Count;
+            // Add the object list
+            foreach (byte[] i in encodedObjectList)
+            {
+                bytes.AddRange(i);
+                // Return to multiple of 4
+                while (bytes.Count % 4 != 0)
+                {
+                    bytes.Add(0);
+                }
+            }
+
+            int fileLength = bytes.Count;
+            byte[] fileLengthBytes = BitConverter.GetBytes(fileLength);
+            fileLengthBytes = fileLengthBytes.Reverse().ToArray();
+            bytes.RemoveRange(4, 4);
+            bytes.InsertRange(4, fileLengthBytes);
+
+            byte[] objectStartPositionBytes = BitConverter.GetBytes(objectStartPosition);
+            objectStartPositionBytes = objectStartPositionBytes.Reverse().ToArray();
+            bytes.RemoveRange(12, 4);
+            bytes.InsertRange(12, objectStartPositionBytes);
+
+            return bytes.ToArray();
+        }
+
         public UnityObject FindObjectByID(int id)
         {
-            foreach (UnityObject obj in objectList)
+            foreach (UnityObject obj in objectList) // This seems inefficient
             {
                 if (obj != null && obj.ID == id)
                 {

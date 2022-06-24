@@ -59,6 +59,36 @@ namespace WOTWLevelEditor.Objects
             return (Transform)ParentLevel.FindObjectByID(ChildrenIDs[id]);
         }
 
+        public override byte[] Encode()
+        {
+            List<byte> bytes = new();
+            bytes.AddRange(BitConverter.GetBytes(0));
+            bytes.AddRange(BitConverter.GetBytes(GameObjectID));
+            bytes.AddRange(BitConverter.GetBytes(0));
+            bytes.AddRange(BitConverter.GetBytes(Rotation.W));
+            bytes.AddRange(BitConverter.GetBytes(Rotation.X));
+            bytes.AddRange(BitConverter.GetBytes(Rotation.Y));
+            bytes.AddRange(BitConverter.GetBytes(Rotation.Z));
+            bytes.AddRange(BitConverter.GetBytes(Position.X));
+            bytes.AddRange(BitConverter.GetBytes(Position.Y));
+            bytes.AddRange(BitConverter.GetBytes(Position.Z));
+            bytes.AddRange(BitConverter.GetBytes(Scale.X));
+            bytes.AddRange(BitConverter.GetBytes(Scale.Y));
+            bytes.AddRange(BitConverter.GetBytes(Scale.Z));
+            bytes.AddRange(BitConverter.GetBytes(ChildrenIDs.Length));
+            foreach (int i in ChildrenIDs)
+            {
+                bytes.AddRange(BitConverter.GetBytes(0));
+                bytes.AddRange(BitConverter.GetBytes(i));
+                bytes.AddRange(BitConverter.GetBytes(0));
+            }
+            bytes.AddRange(BitConverter.GetBytes(0));
+            bytes.AddRange(BitConverter.GetBytes(ParentID));
+            bytes.AddRange(BitConverter.GetBytes(0));
+
+            return bytes.ToArray();
+        }
+
         public override string ToString()
         {
             return string.Join(", ", GameObjectID, Rotation, Position, Scale, string.Join("-", ChildrenIDs), ParentID);

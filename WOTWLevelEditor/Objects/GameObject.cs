@@ -53,6 +53,30 @@ namespace WOTWLevelEditor.Objects
             return ParentLevel.FindObjectByID(ComponentIDs[id]);
         }
 
+        public override byte[] Encode()
+        {
+            List<byte> bytes = new();
+            bytes.AddRange(BitConverter.GetBytes(ComponentIDs.Length));
+            foreach (int i in ComponentIDs)
+            {
+                bytes.AddRange(BitConverter.GetBytes(0));
+                bytes.AddRange(BitConverter.GetBytes(i));
+                bytes.AddRange(BitConverter.GetBytes(0));
+            }
+            bytes.AddRange(BitConverter.GetBytes(Data2));
+            bytes.AddRange(BitConverter.GetBytes(Data3));
+            bytes.AddRange(BitConverter.GetBytes(Name.Length));
+            bytes.AddRange(System.Text.Encoding.ASCII.GetBytes(Name));
+            // Return to multiple of 4
+            while (bytes.Count % 4 != 0)
+            {
+                bytes.Add(0);
+            }
+            bytes.AddRange(BitConverter.GetBytes(Enabled));
+
+            return bytes.ToArray();
+        }
+
         public override string ToString()
         {
             return string.Join(", ", string.Join("-", ComponentIDs), Data2, Data3, Name, Enabled);

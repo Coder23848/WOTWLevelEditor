@@ -11,6 +11,15 @@
             Name = name;
         }
 
+        public byte[] Encode()
+        {
+            List<byte> bytes = new();
+            bytes.AddRange(Data);
+            bytes.AddRange(System.Text.Encoding.ASCII.GetBytes(Name));
+            bytes.Add(0x00);
+            return bytes.ToArray();
+        }
+
         public override string ToString()
         {
             return Name;
