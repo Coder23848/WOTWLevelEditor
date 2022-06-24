@@ -2,7 +2,6 @@
 {
     public class UnityObject
     {
-        public virtual ObjectTypes Type => throw new NotImplementedException();
         public Level ParentLevel { get; }
         public int ID { get; }
         protected UnityObject(Level level, int id)

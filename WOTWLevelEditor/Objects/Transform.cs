@@ -5,7 +5,6 @@ namespace WOTWLevelEditor.Objects
 {
     public class Transform : UnityObject
     {
-        public override ObjectTypes Type => ObjectTypes.Transform;
         public int GameObjectID { get; }
         public Quaternion Rotation { get; }
         public Vector3 Position { get; }

@@ -4,7 +4,6 @@ namespace WOTWLevelEditor.Objects
 {
     public class GameObject : UnityObject
     {
-        public override ObjectTypes Type => ObjectTypes.GameObject;
         public int[] ComponentIDs { get; }
         public int Data2 { get; }
         public int Data3 { get; }

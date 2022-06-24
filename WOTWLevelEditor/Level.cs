@@ -150,15 +150,14 @@ namespace WOTWLevelEditor
                         objectList[i] = Transform.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData);
                         break;
                     default:
+                        objectList[i] = UnknownFallback.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData);
                         break;
-                        throw new NotImplementedException("Unsupported Object Type " + ObjectTypeLinkList[i].TypeID.Type.ToString() + " at position " + parserLocation);
                 }
             }
         }
 
         public UnityObject FindObjectByID(int id)
         {
-            if (id == 0) return null;
             foreach (UnityObject obj in objectList)
             {
                 if (obj != null && obj.ID == id)

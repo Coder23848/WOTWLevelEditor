@@ -41,7 +41,7 @@ namespace WOTWLevelEditor
                 Console.WriteLine("    " + i.ToString());
             }*/
 
-            /*Console.WriteLine("Objects (" + level.ObjectList.Length + "):");
+            Console.WriteLine("Objects (" + level.ObjectList.Length + "):");
             for (int i = 0; i < level.ObjectList.Length; i++)
             {
                 if (level.ObjectList[i] == null)
@@ -52,7 +52,7 @@ namespace WOTWLevelEditor
                 {
                     Console.WriteLine("    " + level.ObjectTypeLinkList[i].TypeID.ToString() + " " + level.ObjectTypeLinkList[i].ObjectID.ToString() + ": " + level.ObjectList[i].ToString());
                 }
-            }*/
+            }
         }
     }
 }
