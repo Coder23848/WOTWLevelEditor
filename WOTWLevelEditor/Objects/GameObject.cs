@@ -11,7 +11,7 @@ namespace WOTWLevelEditor.Objects
         public bool Enabled { get; }
         public Transform ThisTransform => (Transform)ParentLevel.FindObjectByID(ComponentIDs[0]);
 
-        public GameObject(Level level, int id, int[] componentIDs, int data2, int data3, string name, bool enabled) : base(level, id)
+        public GameObject(Level level, ObjectType type, int id, int[] componentIDs, int data2, int data3, string name, bool enabled) : base(level, type, id)
         {
             ComponentIDs = componentIDs;
             Data2 = data2;
@@ -20,7 +20,7 @@ namespace WOTWLevelEditor.Objects
             Enabled = enabled;
         }
 
-        public static GameObject Parse(Level level, int id, byte[] bytes)
+        public static GameObject Parse(Level level, ObjectType type, int id, byte[] bytes)
         {
             int[] componentIDs = new int[BitConverter.ToInt32(bytes, 0)];
             int parserLocation = 4;
@@ -45,7 +45,7 @@ namespace WOTWLevelEditor.Objects
             }
             parserLocation += 2;
             bool enabled = BitConverter.ToBoolean(bytes, parserLocation);
-            return new GameObject(level, id, componentIDs, data2, data3, name, enabled);
+            return new GameObject(level, type, id, componentIDs, data2, data3, name, enabled);
         }
 
         public UnityObject GetComponent(int id)

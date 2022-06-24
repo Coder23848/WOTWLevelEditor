@@ -8,35 +8,7 @@ namespace WOTWLevelEditor
     /// </summary>
     public class Level
     {
-        private readonly int fileLength;
-        /// <summary>
-        /// The length of the level file in bytes.
-        /// </summary>
-        public int FileLength => fileLength;
-
-        private readonly ObjectType[] objectTypeList = Array.Empty<ObjectType>();
-        /// <summary>
-        /// A list of <see cref="ObjectType"/>s that this <see cref="Level"/> uses.
-        /// </summary>
-        public ObjectType[] ObjectTypeList => objectTypeList;
-
-        private readonly ObjectTypeLink[] objectTypeLinkList = Array.Empty<ObjectTypeLink>();
-        /// <summary>
-        /// A list of <see cref="ObjectTypeLink"/>s that represent the <see cref="UnityObject"/>s in this <see cref="Level"/>.
-        /// </summary>
-        public ObjectTypeLink[] ObjectTypeLinkList => objectTypeLinkList;
-
-        private readonly Data3[] data3List = Array.Empty<Data3>();
-        public Data3[] Data3List => data3List;
-
-        private readonly FileReference[] fileReferenceList = Array.Empty<FileReference>();
-        public FileReference[] FileReferenceList => fileReferenceList;
-
         private readonly List<UnityObject> objectList = new();
-        /// <summary>
-        /// A list of <see cref="UnityObject"/>s in this <see cref="Level"/>.
-        /// </summary>
-        public List<UnityObject> ObjectList => objectList;
 
         /// <summary>
         /// Constructs a level from the contents of a level file.
@@ -53,7 +25,7 @@ namespace WOTWLevelEditor
 
             byte[] fileLengthBytes = ByteHelper.GetAtIndex(bytes, parserLocation, 4);
             fileLengthBytes = fileLengthBytes.Reverse().ToArray();
-            fileLength = BitConverter.ToInt32(fileLengthBytes);
+            int fileLength = BitConverter.ToInt32(fileLengthBytes);
             parserLocation += 4;
 
             Debug.Assert(Enumerable.SequenceEqual(ByteHelper.GetAtIndex(bytes, parserLocation, 4), new byte[] { 0x00, 0x00, 0x00, 0x11 })); // Always equals 00-00-00-11
@@ -71,10 +43,10 @@ namespace WOTWLevelEditor
             parserLocation += 5;
 
             // Get list of object types
-            objectTypeList = new ObjectType[BitConverter.ToInt32(bytes, parserLocation)];
+            ObjectType[] objectTypeList = new ObjectType[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
-            for (int i = 0; i < ObjectTypeList.Length; i++)
+            for (int i = 0; i < objectTypeList.Length; i++)
             {
                 if (bytes[parserLocation] == (byte)ObjectTypes.MonoBehaviour)
                 {
@@ -88,7 +60,7 @@ namespace WOTWLevelEditor
                 }
             }
 
-            objectTypeLinkList = new ObjectTypeLink[BitConverter.ToInt32(bytes, parserLocation)];
+            ObjectTypeLink[] objectTypeLinkList = new ObjectTypeLink[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
             // Return to multiple of 4
@@ -97,20 +69,20 @@ namespace WOTWLevelEditor
                 parserLocation++;
             }
 
-            for (int i = 0; i < ObjectTypeLinkList.Length; i++)
+            for (int i = 0; i < objectTypeLinkList.Length; i++)
             {
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 4) == 0); // Always 0 for some reason
                 objectTypeLinkList[i] = new ObjectTypeLink(BitConverter.ToInt32(bytes, parserLocation),
                                          BitConverter.ToInt32(bytes, parserLocation + 8),
                                          BitConverter.ToInt32(bytes, parserLocation + 12),
-                                         ObjectTypeList[BitConverter.ToInt32(bytes, parserLocation + 16)]);
+                                         objectTypeList[BitConverter.ToInt32(bytes, parserLocation + 16)]);
                 parserLocation += 20;
             }
 
-            data3List = new Data3[BitConverter.ToInt32(bytes, parserLocation)];
+            Data3[] data3List = new Data3[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
-            for (int i = 0; i < Data3List.Length; i++)
+            for (int i = 0; i < data3List.Length; i++)
             {
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 1); // Always 1 for some reason
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0); // Always 0 for some reason
@@ -118,7 +90,7 @@ namespace WOTWLevelEditor
                 parserLocation += 12;
             }
 
-            fileReferenceList = new FileReference[BitConverter.ToInt32(bytes, parserLocation)];
+            FileReference[] fileReferenceList = new FileReference[BitConverter.ToInt32(bytes, parserLocation)];
             parserLocation += 4;
 
             for(int i = 0; i < fileReferenceList.Length; i++)
@@ -137,20 +109,20 @@ namespace WOTWLevelEditor
                 parserLocation++;
             }
 
-            objectList = new(ObjectTypeLinkList.Length);
-            for(int i = 0; i < ObjectTypeLinkList.Length; i++)
+            objectList = new(objectTypeLinkList.Length);
+            for(int i = 0; i < objectTypeLinkList.Length; i++)
             {
-                byte[] objectData = ByteHelper.GetAtIndex(bytes, objectStartLocation + ObjectTypeLinkList[i].Position, ObjectTypeLinkList[i].Length);
-                switch (ObjectTypeLinkList[i].TypeID.Type)
+                byte[] objectData = ByteHelper.GetAtIndex(bytes, objectStartLocation + objectTypeLinkList[i].Position, objectTypeLinkList[i].Length);
+                switch (objectTypeLinkList[i].ThisType.Type)
                 {
                     case ObjectTypes.GameObject:
-                        objectList.Add(GameObject.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData));
+                        objectList.Add(GameObject.Parse(this, objectTypeLinkList[i].ThisType, objectTypeLinkList[i].ObjectID, objectData));
                         break;
                     case ObjectTypes.Transform:
-                        objectList.Add(Transform.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData));
+                        objectList.Add(Transform.Parse(this, objectTypeLinkList[i].ThisType, objectTypeLinkList[i].ObjectID, objectData));
                         break;
                     default:
-                        objectList.Add(UnknownFallback.Parse(this, ObjectTypeLinkList[i].ObjectID, objectData));
+                        objectList.Add(UnknownFallback.Parse(this, objectTypeLinkList[i].ThisType, objectTypeLinkList[i].ObjectID, objectData));
                         break;
                 }
             }
@@ -166,6 +138,15 @@ namespace WOTWLevelEditor
                 }
             }
             throw new IndexOutOfRangeException("Object with ID " + id + " does not exist.");
+        }
+
+        public void PrintObjectList()
+        {
+            Console.WriteLine("Objects (" + objectList.Count + "):");
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                Console.WriteLine("    " + objectList[i].ThisType.ToString() + " " + objectList[i].ID + ": " + objectList[i].ToString());
+            }
         }
     }
 }
