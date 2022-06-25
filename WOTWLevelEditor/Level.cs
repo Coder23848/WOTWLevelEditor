@@ -242,8 +242,8 @@ namespace WOTWLevelEditor
             int unknown = this.unknown;
             byte[] unknownBytes = BitConverter.GetBytes(unknown);
             unknownBytes = unknownBytes.Reverse().ToArray();
-            bytes.RemoveRange(4, 4);
-            bytes.InsertRange(4, unknownBytes);
+            bytes.RemoveRange(0, 4);
+            bytes.InsertRange(0, unknownBytes);
 
             int fileLength = bytes.Count;
             byte[] fileLengthBytes = BitConverter.GetBytes(fileLength);
