@@ -176,14 +176,14 @@ namespace WOTWLevelEditor
                 }
                 byte[] encoded = i.Encode();
                 int objectLength = encoded.Length;
-                // Return to multiple of 4
-                while (objectLength % 4 != 0)
-                {
-                    objectLength++;
-                }
                 // Set up the object's type link
                 newObjectTypeLinkList.Add(new(i.ID, objectLocation, objectLength, thisTypeID, i.ThisType));
                 objectLocation += objectLength;
+                // Return to multiple of 4
+                while (objectLocation % 4 != 0)
+                {
+                    objectLocation++;
+                }
                 // Set up the object data
                 encodedObjectList.Add(encoded);
             }

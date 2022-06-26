@@ -17,7 +17,11 @@ namespace WOTWLevelEditor
 
             level.PrintObjectList();
 
-            File.WriteAllBytes(args[0], level.Encode());
+            Console.ReadLine();
+
+            byte[] output = level.Encode();
+
+            File.WriteAllBytes(args[0], output);
         }
     }
 }

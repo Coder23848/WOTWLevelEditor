@@ -51,6 +51,8 @@ namespace WOTWLevelEditor.Objects
             Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 0);
             int parentID = BitConverter.ToInt32(bytes, parserLocation + 4);
             Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0);
+            parserLocation += 12;
+            Debug.Assert(bytes.Length == parserLocation);
             return new Transform(level, type, id, gameObjectID, rotation, position, scale, childrenIDs, parentID);
         }
 
