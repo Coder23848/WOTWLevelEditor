@@ -6,9 +6,9 @@ namespace WOTWLevelEditor.Objects
     public class Transform : UnityObject
     {
         public int GameObjectID { get; }
-        public Quaternion Rotation { get; }
-        public Vector3 Position { get; }
-        public Vector3 Scale { get; }
+        public Quaternion Rotation { get; set; }
+        public Vector3 Position { get; set; }
+        public Vector3 Scale { get; set; }
         public int[] ChildrenIDs { get; }
         public int ParentID { get; }
         public GameObject ThisGameObject => (GameObject)ParentLevel.FindObjectByID(GameObjectID);
