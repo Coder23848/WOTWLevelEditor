@@ -67,10 +67,10 @@ namespace WOTWLevelEditor.Objects
             bytes.AddRange(BitConverter.GetBytes(0));
             bytes.AddRange(BitConverter.GetBytes(GameObjectID));
             bytes.AddRange(BitConverter.GetBytes(0));
-            bytes.AddRange(BitConverter.GetBytes(Rotation.W));
             bytes.AddRange(BitConverter.GetBytes(Rotation.X));
             bytes.AddRange(BitConverter.GetBytes(Rotation.Y));
             bytes.AddRange(BitConverter.GetBytes(Rotation.Z));
+            bytes.AddRange(BitConverter.GetBytes(Rotation.W));
             bytes.AddRange(BitConverter.GetBytes(Position.X));
             bytes.AddRange(BitConverter.GetBytes(Position.Y));
             bytes.AddRange(BitConverter.GetBytes(Position.Z));
