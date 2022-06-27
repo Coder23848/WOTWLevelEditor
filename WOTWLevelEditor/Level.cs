@@ -8,8 +8,7 @@ namespace WOTWLevelEditor
     /// </summary>
     public class Level
     {
-        // These three are only used because I haven't yet figured out how to calculate them from the object list.
-        private readonly int unknown = 0;
+        // These two are only used because I haven't yet figured out how to calculate them from the object list.
         private readonly List<Data3> data3List = new();
         private readonly List<FileReference> fileReferenceList = new();
 
@@ -26,7 +25,6 @@ namespace WOTWLevelEditor
             byte[] unknownBytes = ByteHelper.GetAtIndex(bytes, parserLocation, 4);
             unknownBytes = unknownBytes.Reverse().ToArray();
             int unknown = BitConverter.ToInt32(unknownBytes);
-            this.unknown = unknown;
             parserLocation += 4;
 
             byte[] fileLengthBytes = ByteHelper.GetAtIndex(bytes, parserLocation, 4);
@@ -221,10 +219,12 @@ namespace WOTWLevelEditor
                 bytes.AddRange(i.Encode());
             }
 
+            int unityWhy = 19;
             // Return to multiple of 16
             while (bytes.Count % 16 != 0)
             {
                 bytes.Add(0);
+                unityWhy++;
             }
 
             int objectStartPosition = bytes.Count;
@@ -239,7 +239,8 @@ namespace WOTWLevelEditor
                 }
             }
 
-            int unknown = this.unknown;
+            // Always equals the end of the file reference list minus 19, for some reason
+            int unknown = objectStartPosition - unityWhy;
             byte[] unknownBytes = BitConverter.GetBytes(unknown);
             unknownBytes = unknownBytes.Reverse().ToArray();
             bytes.RemoveRange(0, 4);
