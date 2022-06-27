@@ -260,6 +260,12 @@ namespace WOTWLevelEditor
             return bytes.ToArray();
         }
 
+        /// <summary>
+        /// Gets a <see cref="UnityObject"/> based on its ID.
+        /// </summary>
+        /// <param name="id">The ID to search for.</param>
+        /// <returns>A <see cref="UnityObject"/> with the specified ID.</returns>
+        /// <exception cref="IndexOutOfRangeException">A <see cref="UnityObject"/> with the specified ID does not exist in this <see cref="Level"/>.</exception>
         public UnityObject FindObjectByID(int id)
         {
             foreach (UnityObject obj in objectList) // This seems inefficient
@@ -272,6 +278,11 @@ namespace WOTWLevelEditor
             throw new IndexOutOfRangeException("Object with ID " + id + " does not exist.");
         }
 
+        /// <summary>
+        /// Gets a list of <see cref="GameObject"/>s based on their name.
+        /// </summary>
+        /// <param name="name">The name to search for.</param>
+        /// <returns>A list of all <see cref="GameObject"/>s in this <see cref="Level"/> with the specified name.</returns>
         public List<GameObject> FindGameObjectsByName(string name)
         {
             List<GameObject> result = new();
@@ -285,6 +296,10 @@ namespace WOTWLevelEditor
             return result;
         }
 
+        /// <summary>
+        /// Deletes a <see cref="UnityObject"/> in this <see cref="Level"/>, and everything attatched to it.
+        /// </summary>
+        /// <param name="id">The ID of the <see cref="UnityObject"/> to delete.</param>
         public void DeleteObject(int id)
         {
             UnityObject obj;
@@ -299,7 +314,7 @@ namespace WOTWLevelEditor
             if (obj is GameObject gameObject)
             {
                 int[] componentIDs = new int[gameObject.ComponentIDs.Count];
-                gameObject.ComponentIDs.CopyTo(componentIDs);
+                gameObject.ComponentIDs.CopyTo(componentIDs); // This is kinda weird
                 foreach (int i in componentIDs)
                 {
                     DeleteObject(i);
@@ -310,7 +325,7 @@ namespace WOTWLevelEditor
                 transform.ThisGameObject.ComponentIDs.Remove(id); // This is needed to prevent an infinite loop
                 DeleteObject(transform.GameObjectID);
                 int[] childrenIDs = new int[transform.ChildrenIDs.Count];
-                transform.ChildrenIDs.CopyTo(childrenIDs);
+                transform.ChildrenIDs.CopyTo(childrenIDs); // This is kinda weird
                 foreach (int i in childrenIDs)
                 {
                     DeleteObject(i);
