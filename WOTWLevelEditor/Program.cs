@@ -28,6 +28,18 @@ namespace WOTWLevelEditor
                     case "listall":
                         level.PrintObjectList();
                         break;
+                    case "select":
+                        List<GameObject> objects = level.FindGameObjectsByName(commandArgs[1]);
+                        if (objects.Count > 0)
+                        {
+                            selected = objects[int.Parse(commandArgs[2])];
+                            Console.WriteLine(selected.ID.ToString() + ", " + selected.ThisType.ToString() + ": " + selected.ToString());
+                        }
+                        else
+                        {
+                            Console.WriteLine("there are no objects with that name");
+                        }
+                        break;
                     case "selectid":
                         selected = level.FindObjectByID(int.Parse(commandArgs[1]));
                         Console.WriteLine(selected.ID.ToString() + ", " + selected.ThisType.ToString() + ": " + selected.ToString());

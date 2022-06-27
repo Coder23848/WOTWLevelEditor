@@ -272,6 +272,19 @@ namespace WOTWLevelEditor
             throw new IndexOutOfRangeException("Object with ID " + id + " does not exist.");
         }
 
+        public List<GameObject> FindGameObjectsByName(string name)
+        {
+            List<GameObject> result = new();
+            foreach (UnityObject obj in objectList) // This seems inefficient
+            {
+                if (obj != null && obj is GameObject gob && gob.Name == name)
+                {
+                    result.Add(gob);
+                }
+            }
+            return result;
+        }
+
         public void DeleteObject(int id)
         {
             UnityObject obj;
