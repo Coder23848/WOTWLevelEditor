@@ -65,6 +65,10 @@ namespace WOTWLevelEditor
                         }
                         Console.WriteLine("this command only works on transforms or gameobjects");
                         break;
+                    case "delete":
+                        level.DeleteObject(selected.ID);
+                        Console.WriteLine("done");
+                        break;
                     case "save":
                         byte[] output = level.Encode();
                         File.WriteAllBytes(args[0], output);

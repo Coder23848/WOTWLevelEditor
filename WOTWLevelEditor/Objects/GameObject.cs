@@ -4,7 +4,7 @@ namespace WOTWLevelEditor.Objects
 {
     public class GameObject : UnityObject
     {
-        public int[] ComponentIDs { get; }
+        public List<int> ComponentIDs { get; set; }
         public int Data2 { get; }
         public int Data3 { get; }
         public string Name { get; }
@@ -13,7 +13,7 @@ namespace WOTWLevelEditor.Objects
         public bool Enabled { get; }
         public Transform ThisTransform => (Transform)ParentLevel.FindObjectByID(ComponentIDs[0]);
 
-        public GameObject(Level level, ObjectType type, int id, int[] componentIDs, int data2, int data3, string name, byte data4, byte data5, bool enabled) : base(level, type, id)
+        public GameObject(Level level, ObjectType type, int id, List<int> componentIDs, int data2, int data3, string name, byte data4, byte data5, bool enabled) : base(level, type, id)
         {
             ComponentIDs = componentIDs;
             Data2 = data2;
@@ -54,7 +54,7 @@ namespace WOTWLevelEditor.Objects
             bool enabled = BitConverter.ToBoolean(bytes, parserLocation);
             parserLocation += 1;
             Debug.Assert(bytes.Length == parserLocation);
-            return new GameObject(level, type, id, componentIDs, data2, data3, name, data4, data5, enabled);
+            return new GameObject(level, type, id, new(componentIDs), data2, data3, name, data4, data5, enabled);
         }
 
         public UnityObject GetComponent(int id)
@@ -65,7 +65,7 @@ namespace WOTWLevelEditor.Objects
         public override byte[] Encode()
         {
             List<byte> bytes = new();
-            bytes.AddRange(BitConverter.GetBytes(ComponentIDs.Length));
+            bytes.AddRange(BitConverter.GetBytes(ComponentIDs.Count));
             foreach (int i in ComponentIDs)
             {
                 bytes.AddRange(BitConverter.GetBytes(0));

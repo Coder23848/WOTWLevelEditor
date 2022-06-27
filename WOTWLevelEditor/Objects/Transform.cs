@@ -9,12 +9,12 @@ namespace WOTWLevelEditor.Objects
         public Quaternion Rotation { get; set; }
         public Vector3 Position { get; set; }
         public Vector3 Scale { get; set; }
-        public int[] ChildrenIDs { get; }
+        public List<int> ChildrenIDs { get; set; }
         public int ParentID { get; }
         public GameObject ThisGameObject => (GameObject)ParentLevel.FindObjectByID(GameObjectID);
         public Transform Parent => (Transform)ParentLevel.FindObjectByID(ParentID);
 
-        public Transform(Level level, ObjectType type, int id, int gameObjectID, Quaternion rotation, Vector3 position, Vector3 scale, int[] childrenIDs, int parentID) : base(level, type, id)
+        public Transform(Level level, ObjectType type, int id, int gameObjectID, Quaternion rotation, Vector3 position, Vector3 scale, List<int> childrenIDs, int parentID) : base(level, type, id)
         {
             GameObjectID = gameObjectID;
             Rotation = rotation;
@@ -53,7 +53,7 @@ namespace WOTWLevelEditor.Objects
             Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0);
             parserLocation += 12;
             Debug.Assert(bytes.Length == parserLocation);
-            return new Transform(level, type, id, gameObjectID, rotation, position, scale, childrenIDs, parentID);
+            return new Transform(level, type, id, gameObjectID, rotation, position, scale, new List<int>(childrenIDs), parentID);
         }
 
         public Transform GetChild(int id)
@@ -77,7 +77,7 @@ namespace WOTWLevelEditor.Objects
             bytes.AddRange(BitConverter.GetBytes(Scale.X));
             bytes.AddRange(BitConverter.GetBytes(Scale.Y));
             bytes.AddRange(BitConverter.GetBytes(Scale.Z));
-            bytes.AddRange(BitConverter.GetBytes(ChildrenIDs.Length));
+            bytes.AddRange(BitConverter.GetBytes(ChildrenIDs.Count));
             foreach (int i in ChildrenIDs)
             {
                 bytes.AddRange(BitConverter.GetBytes(0));

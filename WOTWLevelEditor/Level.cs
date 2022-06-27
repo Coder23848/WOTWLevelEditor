@@ -271,6 +271,41 @@ namespace WOTWLevelEditor
             throw new IndexOutOfRangeException("Object with ID " + id + " does not exist.");
         }
 
+        public void DeleteObject(int id)
+        {
+            UnityObject obj;
+            try
+            {
+                obj = FindObjectByID(id);
+            }
+            catch (IndexOutOfRangeException) // Object does not exist, it was probably already deleted
+            {
+                return;
+            }
+            if (obj is GameObject gameObject)
+            {
+                int[] componentIDs = new int[gameObject.ComponentIDs.Count];
+                gameObject.ComponentIDs.CopyTo(componentIDs);
+                foreach (int i in componentIDs)
+                {
+                    DeleteObject(i);
+                }
+            }
+            if (obj is Transform transform)
+            {
+                transform.ThisGameObject.ComponentIDs.Remove(id); // This is needed to prevent an infinite loop
+                DeleteObject(transform.GameObjectID);
+                int[] childrenIDs = new int[transform.ChildrenIDs.Count];
+                transform.ChildrenIDs.CopyTo(childrenIDs);
+                foreach (int i in childrenIDs)
+                {
+                    DeleteObject(i);
+                }
+                transform.Parent.ChildrenIDs.Remove(transform.ID);
+            }
+            objectList.Remove(obj);
+        }
+
         public void PrintObjectList()
         {
             Console.WriteLine("Objects (" + objectList.Count + "):");
