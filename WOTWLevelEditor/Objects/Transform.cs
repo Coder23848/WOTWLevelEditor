@@ -11,8 +11,8 @@ namespace WOTWLevelEditor.Objects
         public Vector3 Scale { get => (Vector3)parameters[3]; set => parameters[3] = value; }
         public List<ObjectID> ChildrenIDs => (List<ObjectID>)parameters[4];
         public ObjectID ParentID => ((ObjectID)parameters[5]);
-        public GameObject ThisGameObject => (GameObject)ParentLevel.FindObjectByID(GameObjectID.ID);
-        public Transform Parent => (Transform)ParentLevel.FindObjectByID(ParentID.ID);
+        public GameObject ThisGameObject => (GameObject)ParentLevel.FindObjectByID(GameObjectID);
+        public Transform Parent => (Transform)ParentLevel.FindObjectByID(ParentID);
 
         public Transform(Level level, ObjectType type, int id, object[] parameters) : base(level, type, id, parameters)
         {
@@ -20,7 +20,7 @@ namespace WOTWLevelEditor.Objects
 
         public Transform GetChild(int id)
         {
-            return (Transform)ParentLevel.FindObjectByID(ChildrenIDs[id].ID);
+            return (Transform)ParentLevel.FindObjectByID(ChildrenIDs[id]);
         }
 
         public void RemoveChild(ObjectID id)

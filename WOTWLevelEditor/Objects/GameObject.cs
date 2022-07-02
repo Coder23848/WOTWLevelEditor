@@ -11,7 +11,7 @@ namespace WOTWLevelEditor.Objects
         public byte Data4 { get => (byte)parameters[4]; }
         public byte Data5 { get => (byte)parameters[5]; }
         public bool Enabled { get => (bool)parameters[6]; }
-        public Transform ThisTransform => (Transform)ParentLevel.FindObjectByID(ComponentIDs[0].ID);
+        public Transform ThisTransform => (Transform)ParentLevel.FindObjectByID(ComponentIDs[0]);
 
         public GameObject(Level level, ObjectType type, int id, object[] parameters) : base(level, type, id, parameters)
         {
@@ -19,7 +19,7 @@ namespace WOTWLevelEditor.Objects
 
         public UnityObject GetComponent(int id)
         {
-            return ParentLevel.FindObjectByID(ComponentIDs[id].ID);
+            return ParentLevel.FindObjectByID(ComponentIDs[id]);
         }
 
         public override string ToString()

@@ -266,6 +266,8 @@ namespace WOTWLevelEditor
             }
             throw new IndexOutOfRangeException("Object with ID " + id + " does not exist.");
         }
+        /// <inheritdoc cref="FindObjectByID(int)"/>
+        public UnityObject FindObjectByID(ObjectID id) => FindObjectByID(id.ID);
 
         /// <summary>
         /// Gets a list of <see cref="GameObject"/>s based on their name.
@@ -301,7 +303,7 @@ namespace WOTWLevelEditor
                     continue;
                 }
 
-                UnityObject obj = FindObjectByID(toDelete[0].ID);
+                UnityObject obj = FindObjectByID(toDelete[0]);
 
                 if (obj is GameObject gob)
                 {
