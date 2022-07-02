@@ -78,7 +78,7 @@ namespace WOTWLevelEditor
                         Console.WriteLine("this command only works on transforms or gameobjects");
                         break;
                     case "delete":
-                        level.DeleteObject(selected.ID);
+                        level.DeleteObject(new(selected.ID));
                         Console.WriteLine("done");
                         break;
                     case "save":

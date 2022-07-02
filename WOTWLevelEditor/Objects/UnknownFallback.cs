@@ -6,20 +6,11 @@
     public class UnknownFallback : UnityObject
     {
         public byte[] Data { get; }
-        public UnknownFallback(Level level, ObjectType type, int id, byte[] data) : base(level, type, id)
+        public UnknownFallback(Level level, ObjectType type, int id, byte[] data) : base(level, type, id, Array.Empty<object>())
         {
             Data = data;
         }
 
-        public static UnknownFallback Parse(Level level, ObjectType type, int id, byte[] bytes)
-        {
-            return new UnknownFallback(level, type, id, bytes);
-        }
-
-        public override byte[] Encode()
-        {
-            return Data;
-        }
         public override string ToString()
         {
             return "Unknown";

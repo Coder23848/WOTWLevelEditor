@@ -1,4 +1,6 @@
-﻿namespace WOTWLevelEditor
+﻿using System.Numerics;
+
+namespace WOTWLevelEditor
 {
     /// <summary>
     /// Represents a Unity object type.
@@ -23,6 +25,16 @@
         {
             Signature = new byte[16];
             Prefix = new byte[6];
+        }
+
+        public Type[] GetSignature()
+        {
+            return BitConverter.ToString(Signature) switch
+            {
+                "76-1C-A8-1F-78-49-15-42-BA-DC-37-F8-10-AB-34-55" => new Type[] { typeof(ObjectID), typeof(Quaternion), typeof(Vector3), typeof(Vector3), typeof(List<ObjectID>), typeof(ObjectID) }, // Transform
+                "2C-F0-38-CC-F1-06-22-04-53-57-07-9A-41-F3-E9-45" => new Type[] { typeof(List<ObjectID>), typeof(int), typeof(int), typeof(string), typeof(byte), typeof(byte), typeof(bool) }, // GameObject
+                _ => Array.Empty<Type>()
+            };
         }
 
         public virtual byte[] Encode()

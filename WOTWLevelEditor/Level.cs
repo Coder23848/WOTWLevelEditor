@@ -122,18 +122,7 @@ namespace WOTWLevelEditor
             for(int i = 0; i < objectTypeLinkList.Length; i++)
             {
                 byte[] objectData = ByteHelper.GetAtIndex(bytes, objectStartLocation + objectTypeLinkList[i].Position, objectTypeLinkList[i].Length);
-                switch (objectTypeLinkList[i].ThisType.Type)
-                {
-                    case ObjectTypes.GameObject:
-                        objectList.Add(GameObject.Parse(this, objectTypeLinkList[i].ThisType, objectTypeLinkList[i].ObjectID, objectData));
-                        break;
-                    case ObjectTypes.Transform:
-                        objectList.Add(Transform.Parse(this, objectTypeLinkList[i].ThisType, objectTypeLinkList[i].ObjectID, objectData));
-                        break;
-                    default:
-                        objectList.Add(UnknownFallback.Parse(this, objectTypeLinkList[i].ThisType, objectTypeLinkList[i].ObjectID, objectData));
-                        break;
-                }
+                objectList.Add(UnityObject.Parse(this, objectTypeLinkList[i].ThisType, objectTypeLinkList[i].ObjectID, objectData));
             }
         }
 
@@ -300,39 +289,40 @@ namespace WOTWLevelEditor
         /// Deletes a <see cref="UnityObject"/> in this <see cref="Level"/>, and everything attatched to it.
         /// </summary>
         /// <param name="id">The ID of the <see cref="UnityObject"/> to delete.</param>
-        public void DeleteObject(int id)
+        public void DeleteObject(ObjectID id)
         {
-            UnityObject obj;
-            try
+            List<ObjectID> toDelete = new() { id };
+            List<ObjectID> deleted = new();
+            while (toDelete.Count > 0)
             {
-                obj = FindObjectByID(id);
-            }
-            catch (IndexOutOfRangeException) // Object does not exist, it was probably already deleted
-            {
-                return;
-            }
-            if (obj is GameObject gameObject)
-            {
-                int[] componentIDs = new int[gameObject.ComponentIDs.Count];
-                gameObject.ComponentIDs.CopyTo(componentIDs); // This is kinda weird
-                foreach (int i in componentIDs)
+                if (deleted.Contains(toDelete[0]))
                 {
-                    DeleteObject(i);
+                    toDelete.Remove(toDelete[0]);
+                    continue;
                 }
-            }
-            if (obj is Transform transform)
-            {
-                transform.ThisGameObject.ComponentIDs.Remove(id); // This is needed to prevent an infinite loop
-                DeleteObject(transform.GameObjectID);
-                int[] childrenIDs = new int[transform.ChildrenIDs.Count];
-                transform.ChildrenIDs.CopyTo(childrenIDs); // This is kinda weird
-                foreach (int i in childrenIDs)
+
+                UnityObject obj = FindObjectByID(toDelete[0].ID);
+
+                if (obj is GameObject gob)
                 {
-                    DeleteObject(i);
+                    toDelete.AddRange(gob.ComponentIDs);
                 }
-                transform.Parent.ChildrenIDs.Remove(transform.ID);
+                if (obj is Transform tra)
+                {
+                    if (!deleted.Contains(tra.ParentID))
+                    {
+                        tra.Parent.ChildrenIDs.Remove(toDelete[0]);
+                    }
+                    if (!deleted.Contains(tra.GameObjectID))
+                    {
+                        toDelete.Add(tra.GameObjectID);
+                    }
+                    toDelete.AddRange(tra.ChildrenIDs);
+                }
+                objectList.Remove(obj);
+                deleted.Add(toDelete[0]);
+                toDelete.Remove(toDelete[0]);
             }
-            objectList.Remove(obj);
         }
 
         public void PrintObjectList()
