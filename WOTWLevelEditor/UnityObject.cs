@@ -89,7 +89,8 @@ namespace WOTWLevelEditor
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
                 Type listType = type.GetGenericArguments()[0];
-                object list = typeof(List<>).MakeGenericType(listType).GetConstructor(Array.Empty<Type>()).Invoke(Array.Empty<object>());
+                //Console.WriteLine(Activator.CreateInstance(type));
+                object list = Activator.CreateInstance(type);
                 int length = BitConverter.ToInt32(bytes, parserLocation);
                 parserLocation += 4;
                 for (int i = 0; i < length; i++)
