@@ -90,12 +90,12 @@ namespace WOTWLevelEditor
             {
                 Type listType = type.GetGenericArguments()[0];
                 //Console.WriteLine(Activator.CreateInstance(type));
-                object list = Activator.CreateInstance(type);
+                object list = Activator.CreateInstance(type)!;
                 int length = BitConverter.ToInt32(bytes, parserLocation);
                 parserLocation += 4;
                 for (int i = 0; i < length; i++)
                 {
-                    list.GetType().GetMethod("Add").Invoke(list, new object[] { ParseType(level, listType, bytes, ref parserLocation) });
+                    list.GetType().GetMethod("Add")!.Invoke(list, new object[] { ParseType(level, listType, bytes, ref parserLocation) });
                 }
                 result = list;
             }
@@ -178,12 +178,12 @@ namespace WOTWLevelEditor
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
-                Array asArray = (Array)data.GetType().GetMethod("ToArray").Invoke(data, Array.Empty<object>());
+                Array asArray = (Array)data.GetType().GetMethod("ToArray")!.Invoke(data, Array.Empty<object>())!;
                 int length = asArray.Length;
                 byte[][] listData = new byte[length][];
                 for (int i = 0; i < listData.Length; i++)
                 {
-                    listData[i] = EncodeType(asArray.GetValue(i));
+                    listData[i] = EncodeType(asArray.GetValue(i)!);
                 }
                 result = BitConverter.GetBytes(length);
                 foreach (byte[] i in listData)
