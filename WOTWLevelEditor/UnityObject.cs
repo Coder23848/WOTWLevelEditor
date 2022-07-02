@@ -112,8 +112,7 @@ namespace WOTWLevelEditor
             }
             else
             {
-                Console.WriteLine("Parsing " + type.FullName + " is not yet supported.");
-                result = null;
+                throw new NotSupportedException("Parsing " + type.FullName + " is not yet supported.");
             }
             return result;
         }
@@ -193,8 +192,7 @@ namespace WOTWLevelEditor
             }
             else
             {
-                Console.WriteLine("Encoding " + type.FullName + " is not yet supported.");
-                result = null;
+                throw new NotSupportedException("Encoding " + type.FullName + " is not yet supported.");
             }
 
             return result;
