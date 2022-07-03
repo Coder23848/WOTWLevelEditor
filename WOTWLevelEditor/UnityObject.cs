@@ -98,17 +98,6 @@ namespace WOTWLevelEditor
                 }
                 result = list;
             }
-            else if (type == typeof(Array))
-            {
-                Type thisType = type.GenericTypeArguments[0];
-                Array contents = Array.CreateInstance(thisType, BitConverter.ToInt32(bytes, parserLocation));
-                parserLocation += 4;
-                for (int i = 0; i < contents.Length; i++)
-                {
-                    contents.SetValue(ParseType(level, thisType, bytes, ref parserLocation), i);
-                }
-                result = contents;
-            }
             else
             {
                 throw new NotSupportedException("Parsing " + type.FullName + " is not yet supported.");
