@@ -35,7 +35,17 @@ INJECT_C_DLLEXPORT bool player_can_move()
 
 void on_fixed_update(app::GameController* this_ptr, float delta)
 {
+}
 
+void reload_scenes()
+{
+    auto scenes_manager = il2cpp::get_class<app::Scenes__Class>("Core", "Scenes")->static_fields->Manager;
+    il2cpp::invoke(scenes_manager, "UnloadAllScenes"); // The game will reload them automatically, since Ori's still in them.
+}
+
+IL2CPP_INTERCEPT(, SeinFeatherFlap, void, EnterAttack, (app::SeinFeatherFlap* this_ptr)) {
+    reload_scenes();
+    //SeinFeatherFlap::EnterAttack(this_ptr);
 }
 
 app::GameController* get_game_controller()

@@ -18,6 +18,23 @@ namespace il2cpp
         std::unordered_map<std::string, Il2CppClass*> resolved_classes;
         std::unordered_map<Il2CppClass*, std::vector<MethodOverloadInfo>> resolved_klass_overloads;
 
+        STATIC_IL2CPP_BINDING(UnityEngine, Object, void, Destroy, (app::Object* this_ptr));
+        STATIC_IL2CPP_BINDING(UnityEngine.SceneManagement, SceneManager, int32_t, get_sceneCount, ());
+        STATIC_IL2CPP_BINDING(UnityEngine.SceneManagement, SceneManager, app::Scene, GetActiveScene, ());
+        STATIC_IL2CPP_BINDING(UnityEngine.SceneManagement, SceneManager, app::Scene, GetSceneAt, (int32_t index));
+
+        IL2CPP_BINDING(UnityEngine, Transform, app::Transform*, get_parent, (app::Transform* this_ptr));
+        IL2CPP_BINDING(UnityEngine, GameObject, app::Transform*, get_transform, (app::GameObject* this_ptr));
+        IL2CPP_BINDING(UnityEngine, Component, app::GameObject*, get_gameObject, (app::Component* this_ptr));
+
+        IL2CPP_BINDING(UnityEngine, Transform, int32_t, GetChildCount, (app::Transform* this_ptr));
+        IL2CPP_BINDING(UnityEngine, Transform, app::Transform*, GetChild, (app::Transform* this_ptr, int32_t index));
+        IL2CPP_BINDING(UnityEngine, Transform, app::Transform*, Find, (app::Transform* this_ptr, app::String* name));
+
+        IL2CPP_BINDING(UnityEngine.SceneManagement, Scene, app::GameObject__Array*, GetRootGameObjects, (app::Scene__Boxed* this_ptr));
+        IL2CPP_BINDING(UnityEngine.SceneManagement, Scene, app::String*, get_path, (app::Scene__Boxed* this_ptr));
+        IL2CPP_BINDING(UnityEngine.SceneManagement, Scene, app::String*, get_name, (app::Scene__Boxed* this_ptr));
+
         IL2CPP_BINDING(System, String, app::Char__Array*, ToCharArray, (app::String* this_ptr));
 
         // Internal il2cpp methods.
@@ -126,8 +143,134 @@ namespace il2cpp
         }
     }
 
+    namespace unity
+    {
+        app::Transform* get_parent(app::Transform* object)
+        {
+            return Transform::get_parent(object);
+        }
+
+        app::Transform* get_transform(void* object)
+        {
+            auto go = reinterpret_cast<app::GameObject*>(object);
+            return GameObject::get_transform(go);
+        }
+
+        std::vector<app::GameObject*> get_children(app::GameObject* game_object)
+        {
+            std::vector<app::GameObject*> children;
+            auto transform = GameObject::get_transform(game_object);
+            auto count = Transform::GetChildCount(transform);
+            for (auto i = 0; i < count; ++i)
+                children.push_back(get_game_object(Transform::GetChild(transform, i)));
+
+            return children;
+        }
+
+        app::GameObject* find_child(app::GameObject* game_object, std::string_view name)
+        {
+            std::vector<app::GameObject*> children;
+            auto transform = GameObject::get_transform(game_object);
+            auto str = il2cpp::string_new(name);
+            transform = Transform::Find(transform, str);
+            return transform != nullptr ? get_game_object(transform) : nullptr;
+        }
+
+        app::GameObject* find_child(app::GameObject* game_object, std::vector<std::string_view> const& path)
+        {
+            for (auto const& name : path)
+            {
+                if (game_object == nullptr)
+                    break;
+
+                game_object = find_child(game_object, name);
+            }
+
+            return game_object;
+        }
+
+        app::GameObject* get_game_object(void* component)
+        {
+            return Component::get_gameObject(reinterpret_cast<app::Component*>(component));
+        }
+
+        void destroy_object(void* object)
+        {
+            Object::Destroy(reinterpret_cast<app::Object*>(object));
+        }
+
+        int32_t get_scene_count()
+        {
+            return SceneManager::get_sceneCount();
+        }
+
+        app::Scene get_scene_at(int32_t i)
+        {
+            return SceneManager::GetSceneAt(i);
+        }
+
+        app::Scene get_active_scene()
+        {
+            return SceneManager::GetActiveScene();
+        }
+
+        std::vector<app::GameObject*> get_root_game_objects(app::Scene& scene)
+        {
+            std::vector<app::GameObject*> output;
+            auto boxed = box_value<app::Scene__Boxed>(get_class("UnityEngine.SceneManagement", "Scene"), scene);
+            auto game_objects = Scene::GetRootGameObjects(boxed);
+            for (auto i = 0; i < game_objects->max_length; ++i)
+                output.push_back(game_objects->vector[i]);
+
+            return output;
+        }
+
+        std::string get_scene_name(app::Scene& scene)
+        {
+            auto boxed = box_value<app::Scene__Boxed>(get_class("UnityEngine.SceneManagement", "Scene"), scene);
+            auto csstring = Scene::get_name(boxed);
+            return convert_csstring(csstring);
+        }
+
+        std::string get_scene_path(app::Scene& scene)
+        {
+            auto boxed = box_value<app::Scene__Boxed>(get_class("UnityEngine.SceneManagement", "Scene"), scene);
+            auto csstring = Scene::get_path(boxed);
+            return convert_csstring(csstring);
+        }
+    }
+
     namespace untyped
     {
+
+        Il2CppObject* create_object(std::string_view namezpace, std::string_view klass, std::string_view nested)
+        {
+            auto actual_klass = get_nested_class(namezpace, klass, nested);
+            if (actual_klass == nullptr)
+                return nullptr;
+
+            return create_object(actual_klass);
+        }
+
+        Il2CppObject* create_object(std::string_view namezpace, std::string_view name)
+        {
+            auto klass = get_class(namezpace, name);
+            if (klass == nullptr)
+                return nullptr;
+
+            return create_object(klass);
+        }
+
+        Il2CppObject* create_object(Il2CppClass* klass)
+        {
+            return il2cpp_object_new(klass);
+        }
+
+        Il2CppObject* box_value(Il2CppClass* klass, void* value)
+        {
+            return il2cpp_value_box(klass, value);
+        }
+
         Il2CppClass* get_class(std::string_view namezpace, std::string_view name)
         {
             auto const& full_name = get_full_name(namezpace, name);
@@ -186,6 +329,21 @@ namespace il2cpp
 
             return output;
         }
+    }
+
+    app::String* string_new(std::string_view str)
+    {
+        return reinterpret_cast<app::String*>(il2cpp_string_new_wrapper(str.data()));
+    }
+
+    app::String* string_new(std::string_view str, uint32_t len)
+    {
+        return reinterpret_cast<app::String*>(il2cpp_string_new_len(str.data(), len));
+    }
+
+    app::String* string_new(std::wstring_view str)
+    {
+        return reinterpret_cast<app::String*>(il2cpp_string_new_utf16(reinterpret_cast<const Il2CppChar*>(str.data()), str.length()));
     }
 
     void trace_overloads(Il2CppClass* klass)
@@ -269,6 +427,81 @@ namespace il2cpp
         }
 
         return info->methods.at(overload);
+    }
+
+    MethodInfo const* get_method_from_name_params(Il2CppClass* klass, std::string_view method, std::vector<void*> const& params)
+    {
+        auto info = get_method_info_internal(klass, method, params.size());
+        if (info == nullptr)
+            return nullptr;
+
+        if (info->methods.size() == 1)
+            return info->methods.front();
+        else
+        {
+            bool first = true;
+            for (auto method_info : info->methods)
+            {
+                auto valid = true;
+                for (auto i = 0; valid && i < method_info->parameters_count; ++i)
+                {
+                    auto& param = method_info->parameters[i];
+                    switch (param.parameter_type->type)
+                    {
+                    case Il2CppTypeEnum::IL2CPP_TYPE_BOOLEAN:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_U1:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_I1:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_U2:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_I2:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_CHAR:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_U4:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_I4:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_U8:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_I8:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_R4:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_R8:
+                        break;
+                    case Il2CppTypeEnum::IL2CPP_TYPE_VALUETYPE:
+                    {
+                        auto param_klass = il2cpp_class_from_type(param.parameter_type);
+                        if (il2cpp_class_is_enum(param_klass))
+                            continue;
+                        break;
+                    }
+                    case Il2CppTypeEnum::IL2CPP_TYPE_STRING:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_PTR:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_U:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_I:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_SZARRAY:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_ARRAY:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_OBJECT:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_VAR:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_MVAR:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_TYPEDBYREF:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_VOID:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_CLASS:
+                    case Il2CppTypeEnum::IL2CPP_TYPE_GENERICINST:
+                    {
+                        auto value = reinterpret_cast<Il2CppObject*>(params.at(param.position));
+                        auto klass_1 = il2cpp_class_from_type(param.parameter_type);
+                        auto klass_2 = value->klass;
+                        if (!is_assignable(klass_2, klass_1))
+                            valid = false;
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                }
+
+                if (valid)
+                    return method_info;
+            }
+        }
+
+        trace(modloader::MessageType::Error, 3, "il2cpp", format("could not find a method overload for '%s:%d'in klass '%s' that matched parameters",
+            method.data(), params.size(), klass->name));
+        return nullptr;
     }
 
     MethodInfo const* get_method_from_name(Il2CppClass* klass, std::string_view method, std::vector<Il2CppClass*> const& params)
@@ -373,6 +606,78 @@ namespace il2cpp
         }
 
         return nullptr;
+    }
+
+    Il2CppObject* invoke_v(void* obj, std::string_view method, std::vector<void*> params)
+    {
+        auto cast_obj = reinterpret_cast<Il2CppObject*>(obj);
+        if (cast_obj == nullptr)
+        {
+            trace(modloader::MessageType::Error, 1, "il2cpp", format("invoked '%s' with nullptr", method.data()));
+            return nullptr;
+        }
+
+        Il2CppException* exc = nullptr;
+        auto method_info = get_method_from_name_params(cast_obj->klass, method.data(), params);
+        if (method_info == nullptr)
+        {
+            trace(modloader::MessageType::Error, 1, "il2cpp", format("failed to find method '%s'", method.data()));
+            return nullptr;
+        }
+
+        void** start = params.data();
+        return il2cpp_runtime_invoke(method_info, cast_obj, start, &exc);
+    }
+
+    Il2CppObject* invoke_virtual_v(void* obj, Il2CppClass* base, std::string_view method, std::vector<void*> params)
+    {
+        auto cast_obj = reinterpret_cast<Il2CppObject*>(obj);
+        if (cast_obj == nullptr)
+        {
+            trace(modloader::MessageType::Error, 1, "il2cpp", format("invoked '%s' with nullptr", method.data()));
+            return nullptr;
+        }
+
+        Il2CppException* exc = nullptr;
+        auto method_info = get_method_from_name_params(base, method.data(), params);
+        if (method_info == nullptr)
+        {
+            trace(modloader::MessageType::Error, 1, "il2cpp", format("failed to find method '%s'", method.data()));
+            return nullptr;
+        }
+
+        auto virtual_method_info = il2cpp_object_get_virtual_method(cast_obj, method_info);
+        if (virtual_method_info == nullptr)
+        {
+            trace(modloader::MessageType::Error, 1, "il2cpp", format("failed to find virtual method '%s'", method.data()));
+            return nullptr;
+        }
+
+        void** start = params.data();
+        return il2cpp_runtime_invoke(virtual_method_info, cast_obj, start, &exc);
+    }
+
+    bool is_assignable(Il2CppClass* klass, std::string_view namezpace, std::string_view name)
+    {
+        return is_assignable(klass, get_class(namezpace, name));
+    }
+
+    bool is_assignable(Il2CppClass* klass, Il2CppClass* iklass)
+    {
+        if (klass == nullptr || iklass == nullptr)
+            return false;
+
+        return il2cpp_class_is_assignable_from(iklass, klass);
+    }
+
+    bool is_assignable(void* obj, std::string_view namezpace, std::string_view name)
+    {
+        return is_assignable(reinterpret_cast<Il2CppObject*>(obj)->klass, namezpace, name);
+    }
+
+    bool is_assignable(void* obj, Il2CppClass* iklass)
+    {
+        return is_assignable(reinterpret_cast<Il2CppObject*>(obj)->klass, iklass);
     }
 
     std::string convert_csstring(app::String* str)
