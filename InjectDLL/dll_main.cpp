@@ -33,19 +33,60 @@ INJECT_C_DLLEXPORT bool player_can_move()
         GameController::get_SecondaryMapAndInventoryCanBeOpened(gcip);
 }
 
-void on_fixed_update(app::GameController* this_ptr, float delta)
-{
-}
-
 void reload_scenes()
 {
     auto scenes_manager = il2cpp::get_class<app::Scenes__Class>("Core", "Scenes")->static_fields->Manager;
     il2cpp::invoke(scenes_manager, "UnloadAllScenes"); // The game will reload them automatically, since Ori's still in them.
 }
 
-IL2CPP_INTERCEPT(, SeinFeatherFlap, void, EnterAttack, (app::SeinFeatherFlap* this_ptr)) {
+bool paused_for_editing = false;
+
+void open_editor()
+{
+    if (paused_for_editing)
+    {
+        trace(MessageType::Warning, 0, "editor", "Tried to open the editor, but it's already open.");
+        return;
+    }
+
+    auto game_controller = get_game_controller();
+    il2cpp::invoke(game_controller, "SuspendGameplayForUI");
+
     reload_scenes();
-    //SeinFeatherFlap::EnterAttack(this_ptr);
+
+    paused_for_editing = true;
+}
+void close_editor()
+{
+    if (!paused_for_editing)
+    {
+        trace(MessageType::Warning, 0, "editor", "Tried to close the editor, but it's already closed.");
+        return;
+    }
+
+    auto game_controller = get_game_controller();
+    il2cpp::invoke(game_controller, "ResumeGameplayForUI");
+
+    reload_scenes();
+
+    paused_for_editing = false;
+}
+
+STATIC_IL2CPP_BINDING(UnityEngine, Input, bool, GetKeyInt, (app::KeyCode__Enum keyCode));
+STATIC_IL2CPP_BINDING(UnityEngine, Input, bool, GetKeyDownInt, (app::KeyCode__Enum keyCode));
+void on_fixed_update(app::GameController* this_ptr, float delta)
+{
+    if (Input::GetKeyInt(app::KeyCode__Enum::KeyCode__Enum_LeftAlt) && Input::GetKeyDownInt(app::KeyCode__Enum::KeyCode__Enum_Alpha1))
+    {
+        if (paused_for_editing)
+        {
+            close_editor();
+        }
+        else
+        {
+            open_editor();
+        }
+    }
 }
 
 app::GameController* get_game_controller()

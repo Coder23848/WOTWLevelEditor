@@ -158,6 +158,11 @@ namespace modloader
         FreeLibraryAndExitThread(GetModuleHandleA("Il2CppModLoader.dll"), 0);
     }
 
+    IL2CPP_MODLOADER_DLLEXPORT void shutdown()
+    {
+        shutdown_thread = true;
+    }
+
     bool initialized = false;
     IL2CPP_INTERCEPT(, GameController, void, FixedUpdate, (app::GameController* this_ptr)) {
         if (!initialized) {
