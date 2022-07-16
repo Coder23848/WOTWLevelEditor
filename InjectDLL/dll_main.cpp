@@ -74,6 +74,29 @@ void close_editor()
 
 STATIC_IL2CPP_BINDING(UnityEngine, Input, bool, GetKeyInt, (app::KeyCode__Enum keyCode));
 STATIC_IL2CPP_BINDING(UnityEngine, Input, bool, GetKeyDownInt, (app::KeyCode__Enum keyCode));
+STATIC_IL2CPP_BINDING(UnityEngine, Input, bool, GetMouseButtonDown, (int32_t button));
+STATIC_IL2CPP_BINDING(, MoonInput, app::Vector3, get_mousePosition, ());
+STATIC_IL2CPP_BINDING(UnityEngine, Camera, app::Camera*, get_main, ());
+IL2CPP_BINDING(UnityEngine, Behaviour, bool, get_enabled, (app::Camera* this_ptr));
+IL2CPP_BINDING(UnityEngine, Camera, app::Vector3, ScreenToWorldPoint, (app::Camera* this_ptr, app::Vector3 position));
+
+app::Camera* camera = nullptr;
+app::Camera* get_camera()
+{
+    if (camera == nullptr || !Behaviour::get_enabled(camera))
+    {
+        camera = Camera::get_main();
+    }
+    return camera;
+}
+
+app::Vector3 world_mouse_position()
+{
+    auto screen_mouse_position = MoonInput::get_mousePosition();
+    auto camera = get_camera();
+    return Camera::ScreenToWorldPoint(camera, screen_mouse_position);
+}
+
 void on_fixed_update(app::GameController* this_ptr, float delta)
 {
     if (Input::GetKeyInt(app::KeyCode__Enum::KeyCode__Enum_LeftAlt) && Input::GetKeyDownInt(app::KeyCode__Enum::KeyCode__Enum_Alpha1))
@@ -86,6 +109,13 @@ void on_fixed_update(app::GameController* this_ptr, float delta)
         {
             open_editor();
         }
+    }
+    
+    if (paused_for_editing && Input::GetMouseButtonDown(0))
+    {
+        auto pos = world_mouse_position();
+        pos.z = 0;
+        trace(MessageType::Warning, 0, "editor", std::to_string(pos.x) + ", " + std::to_string(pos.y));
     }
 }
 
