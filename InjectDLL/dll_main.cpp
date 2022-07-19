@@ -35,7 +35,7 @@ INJECT_C_DLLEXPORT bool player_can_move()
 
 void reload_scenes()
 {
-    auto scenes_manager = il2cpp::get_class<app::Scenes__Class>("Core", "Scenes")->static_fields->Manager;
+    auto scenes_manager = get_scenes_manager();
     il2cpp::invoke(scenes_manager, "UnloadAllScenes"); // The game will reload them automatically, since Ori's still in them.
 }
 
@@ -52,7 +52,7 @@ void open_editor()
     auto game_controller = get_game_controller();
     il2cpp::invoke(game_controller, "SuspendGameplayForUI");
 
-    reload_scenes();
+    //reload_scenes();
 
     paused_for_editing = true;
 }
@@ -67,7 +67,7 @@ void close_editor()
     auto game_controller = get_game_controller();
     il2cpp::invoke(game_controller, "ResumeGameplayForUI");
 
-    reload_scenes();
+    //reload_scenes();
 
     paused_for_editing = false;
 }
@@ -75,10 +75,12 @@ void close_editor()
 STATIC_IL2CPP_BINDING(UnityEngine, Input, bool, GetKeyInt, (app::KeyCode__Enum keyCode));
 STATIC_IL2CPP_BINDING(UnityEngine, Input, bool, GetKeyDownInt, (app::KeyCode__Enum keyCode));
 STATIC_IL2CPP_BINDING(UnityEngine, Input, bool, GetMouseButtonDown, (int32_t button));
-STATIC_IL2CPP_BINDING(, MoonInput, app::Vector3, get_mousePosition, ());
+STATIC_IL2CPP_BINDING(UnityEngine, Input, app::Vector3, get_mousePosition, ());
 STATIC_IL2CPP_BINDING(UnityEngine, Camera, app::Camera*, get_main, ());
 IL2CPP_BINDING(UnityEngine, Behaviour, bool, get_enabled, (app::Camera* this_ptr));
+IL2CPP_BINDING(UnityEngine, Transform, app::Vector3, get_position, (app::Transform* this_ptr));
 IL2CPP_BINDING(UnityEngine, Camera, app::Vector3, ScreenToWorldPoint, (app::Camera* this_ptr, app::Vector3 position));
+IL2CPP_BINDING(, CollectablePlaceholder, void, set_IsSuspended, (app::CollectablePlaceholder* this_ptr, bool value));
 
 app::Camera* camera = nullptr;
 app::Camera* get_camera()
@@ -92,8 +94,11 @@ app::Camera* get_camera()
 
 app::Vector3 world_mouse_position()
 {
-    auto screen_mouse_position = MoonInput::get_mousePosition();
+    auto screen_mouse_position = Input::get_mousePosition();
     auto camera = get_camera();
+    auto camera_position = Transform::get_position(il2cpp::unity::get_transform(il2cpp::unity::get_game_object(camera)));
+    //trace(MessageType::Warning, 0, "editor", std::to_string(camera_position.x) + ", " + std::to_string(camera_position.y) + ", " + std::to_string(camera_position.z));
+    screen_mouse_position.z = camera_position.z * -1;
     return Camera::ScreenToWorldPoint(camera, screen_mouse_position);
 }
 
@@ -115,7 +120,22 @@ void on_fixed_update(app::GameController* this_ptr, float delta)
     {
         auto pos = world_mouse_position();
         pos.z = 0;
-        trace(MessageType::Warning, 0, "editor", std::to_string(pos.x) + ", " + std::to_string(pos.y));
+        //auto game_object = il2cpp::create_object<app::GameObject>("UnityEngine", "GameObject");
+        //il2cpp::invoke(game_object, ".ctor", il2cpp::string_new("energyHalfCell"));
+        //auto transform = il2cpp::unity::get_transform(game_object);
+        //il2cpp::invoke(transform, "set_position", &pos);
+        //auto scenes_manager = get_scenes_manager();
+        //auto current_scene = il2cpp::invoke<app::SceneManagerScene>(scenes_manager, "get_CurrentSceneManagerScene");
+        //auto scene_root = current_scene->fields.SceneRoot;
+        //auto root_transform = il2cpp::unity::get_transform(il2cpp::unity::get_game_object(scene_root));
+        //il2cpp::invoke(transform, "SetParent", root_transform);
+        //auto mesh_filter = il2cpp::unity::add_component<app::MeshFilter>(game_object, "UnityEngine", "MeshFilter");
+        //auto mesh_renderer = il2cpp::unity::add_component<app::MeshRenderer>(game_object, "UnityEngine", "MeshRenderer");
+        //auto collectable_placeholder = il2cpp::unity::add_component<app::CollectablePlaceholder>(game_object, "", "CollectablePlaceholder");
+        //CollectablePlaceholder::set_IsSuspended(collectable_placeholder, true);
+        //auto collected_uberstate = il2cpp::create_object<app::SerializedBooleanUberState>("Moon", "SerializedBooleanUberState");
+        //collectable_placeholder->fields.CollectedUberState = collected_uberstate;
+
     }
 }
 
@@ -127,6 +147,11 @@ app::GameController* get_game_controller()
 app::SeinCharacter* get_sein()
 {
     return il2cpp::get_class<app::Characters__Class>("Game", "Characters")->static_fields->m_sein;
+}
+
+app::ScenesManager* get_scenes_manager()
+{
+    return il2cpp::get_class<app::Scenes__Class>("Core", "Scenes")->static_fields->Manager;
 }
 
 void initialize_main()
