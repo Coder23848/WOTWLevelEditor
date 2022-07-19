@@ -26,7 +26,10 @@ namespace WOTWLevelEditor
                 string[] commandArgs = command.Split(' ');
                 switch (commandArgs[0]) {
                     case "listall":
-                        level.PrintObjectList();
+                        string path = Directory.GetCurrentDirectory() + "\\object_list.log";
+                        Console.WriteLine("this may take a while for large files...");
+                        File.WriteAllText(path, level.ObjectListToString());
+                        Console.WriteLine("wrote level contents to " + path);
                         break;
                     case "select":
                         List<GameObject> objects = level.FindGameObjectsByName(commandArgs[1]);

@@ -327,13 +327,15 @@ namespace WOTWLevelEditor
             }
         }
 
-        public void PrintObjectList()
+        public string ObjectListToString()
         {
-            Console.WriteLine("Objects (" + objectList.Count + "):");
+            string list = "";
+            list += "Objects (" + objectList.Count + "):\n";
             for (int i = 0; i < objectList.Count; i++)
             {
-                Console.WriteLine("    " + objectList[i].ThisType.ToString() + " " + objectList[i].ID + ": " + objectList[i].ToString());
+                list += "    " + objectList[i].ThisType.ToString() + " " + objectList[i].ID + ": " + objectList[i].ToString() + "\n";
             }
+            return list;
         }
     }
 }
