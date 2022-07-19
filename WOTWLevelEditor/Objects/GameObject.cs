@@ -24,7 +24,7 @@ namespace WOTWLevelEditor.Objects
 
         public override string ToString()
         {
-            return string.Join(", ", string.Join("-", ComponentIDs), Data2, Data3, Name, Enabled);
+            return string.Join(", ", Name, "Components: [" + string.Join(", ", ComponentIDs) + "]", Enabled ? "Enabled" : "Disabled", "Unknown: " + string.Join(", ", Data2, Data3));
         }
     }
 }

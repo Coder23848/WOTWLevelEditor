@@ -37,7 +37,7 @@ namespace WOTWLevelEditor.Objects
 
         public override string ToString()
         {
-            return string.Join(", ", GameObjectID, Rotation, Position, Scale, string.Join("-", ChildrenIDs), ParentID);
+            return string.Join(", ", "Component of GameObject " + GameObjectID, "Rotation: " + Rotation, "Position: " + Position, "Scale: " + Scale, "Children: [" + string.Join(", ", ChildrenIDs) + "]", "Parent: " + ParentID);
         }
     }
 }
