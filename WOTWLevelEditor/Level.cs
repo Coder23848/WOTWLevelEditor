@@ -89,9 +89,9 @@ namespace WOTWLevelEditor
 
             for (int i = 0; i < data3List.Length; i++)
             {
-                Debug.Assert(BitConverter.ToInt32(bytes, parserLocation) == 1); // Always 1 for some reason
                 Debug.Assert(BitConverter.ToInt32(bytes, parserLocation + 8) == 0); // Always 0 for some reason
-                data3List[i] = new Data3(BitConverter.ToInt32(bytes, parserLocation + 4));
+                data3List[i] = new Data3(BitConverter.ToInt32(bytes, parserLocation),
+                                         BitConverter.ToInt32(bytes, parserLocation + 4));
                 parserLocation += 12;
             }
 
