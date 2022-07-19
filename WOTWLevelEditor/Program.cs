@@ -25,7 +25,7 @@ namespace WOTWLevelEditor
                 }
                 string[] commandArgs = command.Split(' ');
                 switch (commandArgs[0]) {
-                    case "listall":
+                    case "logall":
                         string path = Directory.GetCurrentDirectory() + "\\object_list.log";
                         Console.WriteLine("this may take a while for large files...");
                         File.WriteAllText(path, level.ObjectListToString());
