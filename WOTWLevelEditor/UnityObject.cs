@@ -32,6 +32,7 @@ namespace WOTWLevelEditor
             {
                 ObjectTypes.GameObject => new GameObject(level, type, id, parameters),
                 ObjectTypes.Transform => new Transform(level, type, id, parameters),
+                ObjectTypes.ResourceManager => new ResourceManager(level, type, id, parameters),
                 _ => new UnknownFallback(level, type, id, bytes)
             };
         }
@@ -73,6 +74,22 @@ namespace WOTWLevelEditor
                 result = new ObjectID(BitConverter.ToInt32(bytes, parserLocation),
                                       BitConverter.ToInt32(bytes, parserLocation + 4),
                                       BitConverter.ToInt32(bytes, parserLocation + 8));
+                parserLocation += 12;
+            }
+            else if (type == typeof(PrefabLink))
+            {
+                int length = BitConverter.ToInt32(bytes, parserLocation);
+                parserLocation += 4;
+                string name = System.Text.Encoding.ASCII.GetString(bytes, parserLocation, length);
+                parserLocation += length;
+                while (parserLocation % 4 != 0)
+                {
+                    parserLocation++;
+                }
+                result = new PrefabLink(name,
+                                        BitConverter.ToInt32(bytes, parserLocation),
+                                        BitConverter.ToInt32(bytes, parserLocation + 4),
+                                        BitConverter.ToInt32(bytes, parserLocation + 8));
                 parserLocation += 12;
             }
             else if (type == typeof(string))
