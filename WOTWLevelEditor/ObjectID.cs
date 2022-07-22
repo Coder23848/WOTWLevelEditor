@@ -2,24 +2,31 @@
 {
     public struct ObjectID
     {
-        int data1;
+        public int FileID;
         public int ID { get; }
         int data2;
 
         public ObjectID(int id) : this(0, id, 0)
         {
         }
-        public ObjectID(int data1, int id, int data2)
+        public ObjectID(int fileID, int id, int data2)
         {
-            this.data1 = data1;
+            FileID = fileID;
             ID = id;
             this.data2 = data2;
-            System.Diagnostics.Debug.Assert(this.data1 == 0 && this.data2 == 0);
+            System.Diagnostics.Debug.Assert(this.data2 == 0);
         }
 
         public override string ToString()
         {
-            return "#" + ID;
+            if (FileID == 0)
+            {
+                return "#" + ID;
+            }
+            else
+            {
+                return "File " + FileID + ", #" + ID;
+            }
         }
     }
 }
