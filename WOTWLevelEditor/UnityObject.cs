@@ -171,6 +171,18 @@ namespace WOTWLevelEditor
                  .Concat(BitConverter.GetBytes(((ObjectID)data).ID))
                  .Concat(BitConverter.GetBytes(0)).ToArray();
             }
+            else if (type == typeof(PrefabLink))
+            {
+                result = BitConverter.GetBytes(((PrefabLink)data).Name.Length)
+                 .Concat(System.Text.Encoding.ASCII.GetBytes(((PrefabLink)data).Name)).ToArray();
+                while (result.Length % 4 != 0)
+                {
+                    result = result.Append<byte>(0).ToArray();
+                }
+                result.Concat(BitConverter.GetBytes(((PrefabLink)data).Data1))
+                      .Concat(BitConverter.GetBytes(((PrefabLink)data).ID))
+                      .Concat(BitConverter.GetBytes(((PrefabLink)data).Data3)).ToArray();
+            }
             else if (type == typeof(string))
             {
                 result = BitConverter.GetBytes(((string)data).Length)
