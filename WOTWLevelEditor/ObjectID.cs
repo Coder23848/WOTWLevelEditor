@@ -25,7 +25,7 @@
             }
             else
             {
-                return "File " + FileID + ", #" + ID;
+                return "File " + FileID + " #" + ID;
             }
         }
     }

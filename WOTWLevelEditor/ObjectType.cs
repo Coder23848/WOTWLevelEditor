@@ -33,7 +33,7 @@ namespace WOTWLevelEditor
             {
                 "76-1C-A8-1F-78-49-15-42-BA-DC-37-F8-10-AB-34-55" => new Type[] { typeof(ObjectID), typeof(Quaternion), typeof(Vector3), typeof(Vector3), typeof(List<ObjectID>), typeof(ObjectID) }, // Transform
                 "2C-F0-38-CC-F1-06-22-04-53-57-07-9A-41-F3-E9-45" => new Type[] { typeof(List<ObjectID>), typeof(int), typeof(int), typeof(string), typeof(byte), typeof(byte), typeof(bool) }, // GameObject
-                "0D-9D-88-0E-07-7F-33-C7-6F-C2-C9-9B-D6-29-A5-0A" => new Type[] { typeof(List<PrefabLink>) }, // ResourceManager, incomplete
+                "0D-9D-88-0E-07-7F-33-C7-6F-C2-C9-9B-D6-29-A5-0A" => new Type[] { typeof(List<KeyValuePair<string, ObjectID>>), typeof(List<KeyValuePair<ObjectID, List<ObjectID>>>) }, // ResourceManager, incomplete
                 _ => Array.Empty<Type>()
             };
         }

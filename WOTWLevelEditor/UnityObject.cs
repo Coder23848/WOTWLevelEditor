@@ -76,22 +76,6 @@ namespace WOTWLevelEditor
                                       BitConverter.ToInt32(bytes, parserLocation + 8));
                 parserLocation += 12;
             }
-            else if (type == typeof(PrefabLink))
-            {
-                int length = BitConverter.ToInt32(bytes, parserLocation);
-                parserLocation += 4;
-                string name = System.Text.Encoding.ASCII.GetString(bytes, parserLocation, length);
-                parserLocation += length;
-                while (parserLocation % 4 != 0)
-                {
-                    parserLocation++;
-                }
-                result = new PrefabLink(name,
-                                        BitConverter.ToInt32(bytes, parserLocation),
-                                        BitConverter.ToInt32(bytes, parserLocation + 4),
-                                        BitConverter.ToInt32(bytes, parserLocation + 8));
-                parserLocation += 12;
-            }
             else if (type == typeof(string))
             {
                 int length = BitConverter.ToInt32(bytes, parserLocation);
@@ -114,6 +98,13 @@ namespace WOTWLevelEditor
                     list.GetType().GetMethod("Add")!.Invoke(list, new object[] { ParseType(level, listType, bytes, ref parserLocation) });
                 }
                 result = list;
+            }
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<object,object>).GetGenericTypeDefinition())
+            {
+                Type keyType = type.GetGenericArguments()[0];
+                Type valType = type.GetGenericArguments()[1];
+                object kvp = Activator.CreateInstance(type, new object[] { ParseType(level, keyType, bytes, ref parserLocation), ParseType(level, valType, bytes, ref parserLocation) })!;
+                result = kvp;
             }
             else
             {
@@ -167,21 +158,9 @@ namespace WOTWLevelEditor
             }
             else if (type == typeof(ObjectID))
             {
-                result = BitConverter.GetBytes(0)
+                result = BitConverter.GetBytes(((ObjectID)data).FileID)
                  .Concat(BitConverter.GetBytes(((ObjectID)data).ID))
                  .Concat(BitConverter.GetBytes(0)).ToArray();
-            }
-            else if (type == typeof(PrefabLink))
-            {
-                result = BitConverter.GetBytes(((PrefabLink)data).Name.Length)
-                 .Concat(System.Text.Encoding.ASCII.GetBytes(((PrefabLink)data).Name)).ToArray();
-                while (result.Length % 4 != 0)
-                {
-                    result = result.Append<byte>(0).ToArray();
-                }
-                result.Concat(BitConverter.GetBytes(((PrefabLink)data).Data1))
-                      .Concat(BitConverter.GetBytes(((PrefabLink)data).ID))
-                      .Concat(BitConverter.GetBytes(((PrefabLink)data).Data3)).ToArray();
             }
             else if (type == typeof(string))
             {
@@ -206,6 +185,11 @@ namespace WOTWLevelEditor
                 {
                     result = result.Concat(i).ToArray();
                 }
+            }
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<object, object>).GetGenericTypeDefinition())
+            {
+                result = EncodeType(data.GetType().GetProperty("Key")!.GetValue(data)!)
+                 .Concat(EncodeType(data.GetType().GetProperty("Value")!.GetValue(data)!)).ToArray();
             }
             else
             {
