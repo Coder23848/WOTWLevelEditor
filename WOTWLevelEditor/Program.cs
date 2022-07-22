@@ -4,9 +4,11 @@ namespace WOTWLevelEditor
 {
     class Program
     {
+        private static string basePath = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Ori and the Will of the Wisps\\oriwotw_Data";
+        public static string BasePath { get => basePath; }
+
         static void Main(string[] args)
         {
-            string basePath = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Ori and the Will of the Wisps\\oriwotw_Data";
             if (args.Length > 0)
             {
                 basePath = args[0];
@@ -14,9 +16,9 @@ namespace WOTWLevelEditor
 
             Console.WriteLine("Opened directory: " + basePath);
 
-            Level level = null;
-            UnityObject selected = null;
-            string filePath = null;
+            Level? level = null;
+            UnityObject? selected = null;
+            string? filePath = null;
             while (true)
             {
                 string? command = Console.ReadLine();
