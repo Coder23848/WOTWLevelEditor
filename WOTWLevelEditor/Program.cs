@@ -12,6 +12,8 @@ namespace WOTWLevelEditor
                 basePath = args[0];
             }
 
+            Console.WriteLine("Opened directory: " + basePath);
+
             Level level = null;
             UnityObject selected = null;
             string filePath = null;
@@ -27,9 +29,16 @@ namespace WOTWLevelEditor
                     case "open":
                         filePath = basePath + "\\" + commandArgs[1];
                         Console.WriteLine("Opening file: " + filePath);
-                        byte[] bytes = File.ReadAllBytes(filePath);
-                        level = new Level(bytes);
-                        Console.WriteLine("file opened successfully");
+                        if (File.Exists(filePath))
+                        {
+                            byte[] bytes = File.ReadAllBytes(filePath);
+                            level = new Level(bytes);
+                            Console.WriteLine("file opened successfully");
+                        }
+                        else
+                        {
+                            Console.WriteLine("the file specified does not exist");
+                        }
                         break;
                     case "logall":
                         string path = Directory.GetCurrentDirectory() + "\\object_list.log";
