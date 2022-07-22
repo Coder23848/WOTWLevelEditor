@@ -6,16 +6,15 @@ namespace WOTWLevelEditor
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0) // No file selected
+            string basePath = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Ori and the Will of the Wisps\\oriwotw_Data";
+            if (args.Length > 0)
             {
-                throw new FileNotFoundException();
+                basePath = args[0];
             }
 
-            Console.WriteLine("Opening file: " + args[0]);
-            byte[] bytes = File.ReadAllBytes(args[0]);
-            Level level = new(bytes);
-
-            UnityObject selected = level.FindObjectByID(1);
+            Level level = null;
+            UnityObject selected = null;
+            string filePath = null;
             while (true)
             {
                 string? command = Console.ReadLine();
@@ -25,6 +24,13 @@ namespace WOTWLevelEditor
                 }
                 string[] commandArgs = command.Split(' ');
                 switch (commandArgs[0]) {
+                    case "open":
+                        filePath = basePath + "\\" + commandArgs[1];
+                        Console.WriteLine("Opening file: " + filePath);
+                        byte[] bytes = File.ReadAllBytes(filePath);
+                        level = new Level(bytes);
+                        Console.WriteLine("file opened successfully");
+                        break;
                     case "logall":
                         string path = Directory.GetCurrentDirectory() + "\\object_list.log";
                         Console.WriteLine("this may take a while for large files...");
@@ -86,8 +92,8 @@ namespace WOTWLevelEditor
                         break;
                     case "save":
                         byte[] output = level.Encode();
-                        File.WriteAllBytes(args[0], output);
-                        Console.WriteLine("saved to " + args[0]);
+                        File.WriteAllBytes(filePath, output);
+                        Console.WriteLine("saved to " + filePath);
                         break;
                     case "exit":
                         return;
