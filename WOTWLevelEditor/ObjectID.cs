@@ -2,8 +2,8 @@
 {
     public struct ObjectID
     {
-        public int FileID;
-        public int ID { get; }
+        public int FileID { get; set; }
+        public int ID { get; set; }
         int data2;
 
         public ObjectID(int id) : this(0, id, 0)

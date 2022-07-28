@@ -42,6 +42,10 @@ namespace WOTWLevelEditor
                             Console.WriteLine("the file specified does not exist");
                         }
                         break;
+                    case "clone":
+                        level.CopyTo(level, new(selected.ID));
+                        Console.WriteLine("done");
+                        break;
                     case "logall":
                         string path = Directory.GetCurrentDirectory() + "\\object_list.log";
                         Console.WriteLine("this may take a while for large files...");

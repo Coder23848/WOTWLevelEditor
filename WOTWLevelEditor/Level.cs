@@ -327,6 +327,60 @@ namespace WOTWLevelEditor
             }
         }
 
+        public void CopyTo(Level destination, ObjectID id)
+        {
+            if (FindObjectByID(id) is not GameObject)
+            {
+                throw new ArgumentException("Object " + id.ToString() + " must be a GameObject to be copied.");
+            }
+            List<ObjectID> toAdd = new() { id };
+            Dictionary<ObjectID, ObjectID> conversionTable = new();
+            List<UnityObject> newObjects = new();
+            ObjectID unusedID = destination.GetUnusedID();
+            while (toAdd.Count > 0)
+            {
+                if (!conversionTable.ContainsKey(toAdd[0]) && // Not already added
+                    toAdd[0].FileID == 0) // In this file
+                {
+                    conversionTable.Add(toAdd[0], unusedID);
+                    UnityObject obj = FindObjectByID(toAdd[0]).Clone(destination, unusedID.ID);
+                    unusedID = new(unusedID.ID + 1);
+                    List<ObjectID> references = obj.GetReferences();
+                    if (obj is Transform tra)
+                    {
+                        references.Remove(tra.ParentID);
+                    }
+                    toAdd.AddRange(references);
+                    newObjects.Add(obj);
+                }
+                toAdd.RemoveAt(0);
+            }
+            for (int i = 0; i < newObjects.Count; i++)
+            {
+                newObjects[i].ConvertReferences(conversionTable);
+            }
+            destination.ForceAdd(newObjects);
+        }
+
+        protected void ForceAdd(List<UnityObject> obj)
+        {
+            objectList.AddRange(obj);
+        }
+
+        /// <summary>
+        /// Gets an <see cref="ObjectID"/> that is one higher than the highest ID in this <see cref="Level"/>.
+        /// </summary>
+        /// <returns>An <see cref="ObjectID"/> that is one higher than the highest ID in this <see cref="Level"/>.</returns>
+        public ObjectID GetUnusedID()
+        {
+            int highestID = 1;
+            foreach (UnityObject i in objectList)
+            {
+                highestID = Math.Max(highestID, i.ID);
+            }
+            return new(highestID + 1);
+        }
+
         public string ObjectListToString()
         {
             string list = "";

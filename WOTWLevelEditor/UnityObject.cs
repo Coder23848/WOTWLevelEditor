@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Diagnostics;
 using WOTWLevelEditor.Objects;
 
 namespace WOTWLevelEditor
@@ -197,6 +198,29 @@ namespace WOTWLevelEditor
             }
 
             return result;
+        }
+
+        public virtual UnityObject Clone(Level newParent, int newID)
+        {
+            if (this is UnknownFallback ufb)
+            {
+                return new UnknownFallback(newParent, ThisType, newID, ufb.Data);
+            }
+            else
+            {
+                return (UnityObject)Activator.CreateInstance(GetType(), new object[] { newParent, ThisType, newID, parameters })!;
+            }
+        }
+
+        public virtual List<ObjectID> GetReferences()
+        {
+            Debug.WriteLine(GetType().Name + " does not implement " + nameof(GetReferences));
+            return new();
+        }
+
+        public virtual void ConvertReferences(Dictionary<ObjectID, ObjectID> conversionTable)
+        {
+            Debug.WriteLine(GetType().Name + " does not implement " + nameof(ConvertReferences));
         }
 
         public override string ToString()

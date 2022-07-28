@@ -5,12 +5,12 @@ namespace WOTWLevelEditor.Objects
 {
     public class Transform : UnityObject
     {
-        public ObjectID GameObjectID => (ObjectID)parameters[0];
+        public ObjectID GameObjectID { get => (ObjectID)parameters[0]; set => parameters[0] = value; }
         public Quaternion Rotation { get => (Quaternion)parameters[1]; set => parameters[1] = value; }
         public Vector3 Position { get => (Vector3)parameters[2]; set => parameters[2] = value; }
         public Vector3 Scale { get => (Vector3)parameters[3]; set => parameters[3] = value; }
         public List<ObjectID> ChildrenIDs => (List<ObjectID>)parameters[4];
-        public ObjectID ParentID => (ObjectID)parameters[5];
+        public ObjectID ParentID { get => (ObjectID)parameters[5]; set => parameters[5] = value; }
         public GameObject ThisGameObject => (GameObject)ParentLevel.FindObjectByID(GameObjectID);
         public Transform Parent => (Transform)ParentLevel.FindObjectByID(ParentID);
 
@@ -32,6 +32,31 @@ namespace WOTWLevelEditor.Objects
             else
             {
                 ChildrenIDs.Remove(id);
+            }
+        }
+
+        public override List<ObjectID> GetReferences()
+        {
+            List<ObjectID> references = new();
+            references.Add(GameObjectID);
+            references.AddRange(ChildrenIDs);
+            if (ParentID.ID != 0) // 0 is the scene root
+            {
+                references.Add(ParentID);
+            }
+            return references;
+        }
+
+        public override void ConvertReferences(Dictionary<ObjectID, ObjectID> conversionTable)
+        {
+            GameObjectID = conversionTable[GameObjectID];
+            for (int i = 0; i < ChildrenIDs.Count; i++)
+            {
+                ChildrenIDs[i] = conversionTable[ChildrenIDs[i]];
+            }
+            if (conversionTable.ContainsKey(ParentID))
+            {
+                ParentID = conversionTable[ParentID];
             }
         }
 

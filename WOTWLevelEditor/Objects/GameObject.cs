@@ -22,6 +22,21 @@ namespace WOTWLevelEditor.Objects
             return ParentLevel.FindObjectByID(ComponentIDs[id]);
         }
 
+        public override List<ObjectID> GetReferences()
+        {
+            List<ObjectID> references = new();
+            references.AddRange(ComponentIDs);
+            return references;
+        }
+
+        public override void ConvertReferences(Dictionary<ObjectID, ObjectID> conversionTable)
+        {
+            for (int i = 0; i < ComponentIDs.Count; i++)
+            {
+                ComponentIDs[i] = conversionTable[ComponentIDs[i]];
+            }
+        }
+
         public override string ToString()
         {
             return string.Join(", ", Name, "Components: [" + string.Join(", ", ComponentIDs) + "]", Enabled ? "Enabled" : "Disabled", "Unknown: " + string.Join(", ", Data2, Data3));

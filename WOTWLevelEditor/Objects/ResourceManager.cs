@@ -9,6 +9,11 @@
         {
         }
 
+        public override List<ObjectID> GetReferences()
+        {
+            throw new NotImplementedException("No.");
+        }
+
         public override string ToString()
         {
             string str = "[\n" + string.Join(",\n", Links) + ",";
