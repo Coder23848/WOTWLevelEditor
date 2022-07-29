@@ -208,7 +208,7 @@ namespace WOTWLevelEditor
             }
             else
             {
-                return (UnityObject)Activator.CreateInstance(GetType(), new object[] { newParent, ThisType, newID, parameters })!;
+                return (UnityObject)Activator.CreateInstance(GetType(), new object[] { newParent, ThisType, newID, parameters.ToArray() })!;
             }
         }
 

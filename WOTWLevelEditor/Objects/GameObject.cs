@@ -4,7 +4,7 @@ namespace WOTWLevelEditor.Objects
 {
     public class GameObject : UnityObject
     {
-        public List<ObjectID> ComponentIDs { get => (List<ObjectID>)parameters[0]; }
+        public List<ObjectID> ComponentIDs { get => (List<ObjectID>)parameters[0]; set { parameters[0] = value; } }
         public int Data2 { get => (int)parameters[1]; }
         public int Data3 { get => (int)parameters[2]; }
         public string Name { get => (string)parameters[3]; }
@@ -35,6 +35,13 @@ namespace WOTWLevelEditor.Objects
             {
                 ComponentIDs[i] = conversionTable[ComponentIDs[i]];
             }
+        }
+
+        public override UnityObject Clone(Level newParent, int newID)
+        {
+            GameObject newObj = (GameObject)base.Clone(newParent, newID);
+            newObj.ComponentIDs = newObj.ComponentIDs.ToList();
+            return newObj;
         }
 
         public override string ToString()

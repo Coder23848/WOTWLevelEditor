@@ -9,7 +9,7 @@ namespace WOTWLevelEditor.Objects
         public Quaternion Rotation { get => (Quaternion)parameters[1]; set => parameters[1] = value; }
         public Vector3 Position { get => (Vector3)parameters[2]; set => parameters[2] = value; }
         public Vector3 Scale { get => (Vector3)parameters[3]; set => parameters[3] = value; }
-        public List<ObjectID> ChildrenIDs => (List<ObjectID>)parameters[4];
+        public List<ObjectID> ChildrenIDs { get => (List<ObjectID>)parameters[4]; set => parameters[4] = value; }
         public ObjectID ParentID { get => (ObjectID)parameters[5]; set => parameters[5] = value; }
         public GameObject ThisGameObject => (GameObject)ParentLevel.FindObjectByID(GameObjectID);
         public Transform Parent => (Transform)ParentLevel.FindObjectByID(ParentID);
@@ -58,6 +58,13 @@ namespace WOTWLevelEditor.Objects
             {
                 ParentID = conversionTable[ParentID];
             }
+        }
+
+        public override UnityObject Clone(Level newParent, int newID)
+        {
+            Transform newObj = (Transform)base.Clone(newParent, newID);
+            newObj.ChildrenIDs = newObj.ChildrenIDs.ToList();
+            return newObj;
         }
 
         public override string ToString()
